@@ -148,10 +148,6 @@ export function DataProvider({ children, audience }) {
     },
   }), [audience, commit, state])
 
-  if (!state.ready) {
-    return <div className="grid min-h-screen place-items-center bg-cream text-sm text-muted">Loading records…</div>
-  }
-
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>
 }
 

@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '.env') })
 const { Client } = require('pg')
 
-const base = `http://localhost:${process.env.PORT || 5080}`
+const base = String(process.env.API_BASE || 'https://recruitment-staffing-platform.vercel.app').replace(/\/$/, '')
 const stamp = Date.now().toString(36)
 const ids = new Set()
 const startedAt = new Date()

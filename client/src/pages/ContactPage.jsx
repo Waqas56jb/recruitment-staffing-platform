@@ -21,6 +21,13 @@ export default function ContactPage() {
     {
       label: 'Phone',
       value: siteConfig.contact.phoneDisplay || 'Not configured yet',
+      href: siteConfig.contact.phone ? `tel:${siteConfig.contact.phone}` : undefined,
+    },
+    {
+      label: 'WhatsApp',
+      value: 'Chat on WhatsApp',
+      href: siteConfig.contact.whatsapp,
+      external: true,
     },
     {
       label: 'Address',
@@ -38,7 +45,7 @@ export default function ContactPage() {
         compact
         eyebrow="Contact"
         title="Let’s talk about your workforce needs"
-        description="Use the form for employer, candidate, or general enquiries. Address and telephone numbers are intentionally left configurable."
+        description="Send a message, email the team, or start a WhatsApp chat."
         image={images.desk}
       />
 
@@ -60,7 +67,7 @@ export default function ContactPage() {
                     </dt>
                     <dd className="mt-2 break-words text-ink">
                       {item.href ? (
-                        <a href={item.href} className="hover:text-accent">
+                        <a href={item.href} className="hover:text-accent" {...(item.external ? { target: '_blank', rel: 'noreferrer' } : {})}>
                           {item.value}
                         </a>
                       ) : (

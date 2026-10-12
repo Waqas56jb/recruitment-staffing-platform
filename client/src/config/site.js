@@ -12,14 +12,16 @@ export const siteConfig = {
   },
   contact: {
     email: 'hello@staffora.example',
-    phone: '',
-    phoneDisplay: '',
+    phone: '+447700900100',
+    phoneDisplay: '+44 7700 900100',
+    whatsapp: 'https://wa.me/447700900100?text=Hello%20Staffora%2C%20I%20would%20like%20to%20talk%20about%20staffing.',
     address: '',
     city: '',
     country: '',
     hours: 'Monday–Friday, 9:00–17:30',
   },
   social: {
+    whatsapp: 'https://wa.me/447700900100?text=Hello%20Staffora%2C%20I%20would%20like%20to%20talk%20about%20staffing.',
     linkedin: '',
     twitter: '',
     facebook: '',

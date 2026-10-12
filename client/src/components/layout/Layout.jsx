@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { siteConfig } from '../../config/site'
 import CookieBanner from './CookieBanner'
 import Footer from './Footer'
 import Header from './Header'
@@ -28,6 +29,16 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      {siteConfig.contact.whatsapp ? (
+        <a
+          href={siteConfig.contact.whatsapp}
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-24 right-5 z-[80] rounded-full bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-lift hover:bg-[#1ebe5d]"
+        >
+          WhatsApp
+        </a>
+      ) : null}
       <CookieBanner />
     </div>
   )

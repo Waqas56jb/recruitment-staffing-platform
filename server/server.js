@@ -78,6 +78,7 @@ const PORTALS = new Set([
   'https://recruitment-staffing-platform-clien.vercel.app',
   'https://recruitment-staffing-platform-emplo.vercel.app',
   'https://recruitment-staffing-platform-candi.vercel.app',
+  'https://recruitment-staffing-platform-admin.vercel.app',
   'https://recruitment-staffing-platform-admin-us-4e8d.vercel.app',
   ...String(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean),
 ])

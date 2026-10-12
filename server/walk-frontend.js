@@ -212,9 +212,11 @@ async function main() {
     ]
     const admin = await openPortal(browser, 'http://localhost:5184', adminLogin.session)
     for (const route of adminRoutes) await visit(admin.page, 'http://localhost:5184', route, admin.pageErrors, admin.apiErrors)
-    await admin.page.goto('http://localhost:5184/login', { waitUntil: 'domcontentloaded' })
-    await admin.page.waitForURL('http://localhost:5177/login', { timeout: 10000 })
-    console.log('OK   admin login redirect')
+    const adminLoginPage = await browser.newPage()
+    await adminLoginPage.goto('http://localhost:5184/login', { waitUntil: 'domcontentloaded' })
+    await adminLoginPage.getByRole('heading', { name: 'Sign in' }).waitFor({ timeout: 10000 })
+    console.log('OK   admin login form')
+    await adminLoginPage.close()
     await admin.context.close()
 
     const employerRoutes = [
@@ -225,9 +227,11 @@ async function main() {
     ]
     const employerPortal = await openPortal(browser, 'http://localhost:5178', employerLogin.session)
     for (const route of employerRoutes) await visit(employerPortal.page, 'http://localhost:5178', route, employerPortal.pageErrors, employerPortal.apiErrors)
-    await employerPortal.page.goto('http://localhost:5178/login', { waitUntil: 'domcontentloaded' })
-    await employerPortal.page.waitForURL('http://localhost:5177/login', { timeout: 10000 })
-    console.log('OK   employer login redirect')
+    const employerLoginPage = await browser.newPage()
+    await employerLoginPage.goto('http://localhost:5178/login', { waitUntil: 'domcontentloaded' })
+    await employerLoginPage.getByRole('heading', { name: 'Sign in' }).waitFor({ timeout: 10000 })
+    console.log('OK   employer login form')
+    await employerLoginPage.close()
     await employerPortal.context.close()
 
     const candidateRoutes = [

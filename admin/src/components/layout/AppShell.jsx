@@ -82,16 +82,13 @@ export default function AppShell() {
         </div>
         <NavItems onNavigate={() => setOpen(false)} />
         <div className="border-t border-white/10 p-4 text-xs text-white/60">
-          Demo session · no live backend
+          {user?.email}
         </div>
       </aside>
 
       {open ? <button type="button" className="fixed inset-0 z-30 bg-ink/40 lg:hidden" aria-label="Close overlay" onClick={() => setOpen(false)} /> : null}
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <div className="border-b-2 border-accent bg-ink px-4 py-2 text-center text-xs text-white/80">
-          Demonstration portal — interactions are local only and are not sent to a server.
-        </div>
         <header className="sticky top-0 z-20 flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-line bg-white px-4 py-2 sm:px-6">
           <button type="button" className="rounded-md border border-line p-2 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
             <Menu className="h-5 w-5" />

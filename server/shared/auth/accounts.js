@@ -13,7 +13,7 @@ const productionPortals = {
   public: 'https://recruitment-staffing-platform-clien.vercel.app',
   employee: 'https://recruitment-staffing-platform-emplo.vercel.app',
   candidate: 'https://recruitment-staffing-platform-candi.vercel.app',
-  admin: 'https://recruitment-staffing-platform-admin-us-4e8d.vercel.app',
+  admin: 'https://recruitment-staffing-platform-admin.vercel.app',
 }
 
 function portalOrigin(name, envValue) {
