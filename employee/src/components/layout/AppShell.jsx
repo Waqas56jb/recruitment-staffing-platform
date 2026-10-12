@@ -112,7 +112,7 @@ export default function AppShell() {
               ) : null}
             </div>
             <Button variant="outline" size="sm" onClick={() => { signOut(); navigate('/login') }}>
-              <LogOut className="h-3.5 w-3.5" /> {t('Sign out')}
+              <LogOut className="h-3.5 w-3.5" aria-hidden="true" /><span className="hidden whitespace-nowrap sm:inline">{t('Sign out')}</span><span className="sr-only sm:hidden">{t('Sign out')}</span>
             </Button>
           </div>
         </header>

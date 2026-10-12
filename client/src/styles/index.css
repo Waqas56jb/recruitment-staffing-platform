@@ -64,6 +64,13 @@
     font-family: "Manrope", "Segoe UI", sans-serif;
     font-size: 1rem;
     line-height: 1.6;
+    overflow-wrap: break-word;
+  }
+
+  /* Dutch/French compounds are long: let headings hyphenate instead of overflowing on small screens */
+  h1, h2, h3, h4 {
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
 
   h1,

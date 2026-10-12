@@ -15,7 +15,7 @@ export default function MobileNav({ open, onNavigate, solid = true }) {
     <div
       id="mobile-nav"
       className={cn(
-        'border-t xl:hidden',
+        'border-t min-[1520px]:hidden',
         solid ? 'border-line bg-white' : 'border-white/10 bg-ink',
         open ? 'block' : 'hidden',
       )}
@@ -44,7 +44,7 @@ export default function MobileNav({ open, onNavigate, solid = true }) {
           </NavLink>
         ))}
         <div className="mt-3 grid gap-2 border-t border-line pt-4">
-          <LanguageSwitcher variant={solid ? 'light' : 'dark'} className="justify-self-start" />
+          <LanguageSwitcher mode="segmented" variant={solid ? 'light' : 'dark'} className="w-full justify-between sm:w-auto sm:justify-self-start" />
           {session ? (
             <Button href={panelUrl(session)} variant="secondary" onClick={onNavigate}>
               {t('My panel')}
