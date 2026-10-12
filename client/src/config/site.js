@@ -33,9 +33,9 @@ export const siteConfig = {
   },
   forms: {
     demoNotice:
-      'This is a demonstration form. Submissions are validated in your browser only and are not sent to a server.',
+      'Your submission is saved for the Staffora team to review.',
     cvNote:
-      'CV upload is validated on the frontend only. Actual storage and delivery require backend integration.',
+      'We store the CV file name and size with your interest. The file itself stays on your device.',
   },
   seo: {
     defaultTitle: 'Staffora — Recruitment & Staffing',

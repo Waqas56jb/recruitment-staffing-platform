@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { siteConfig } from '../../config/site'
+import { api } from '@staffora/api'
 import { industries } from '../../data/industries'
 import {
   collectErrors,
@@ -78,14 +78,16 @@ export default function StaffingRequestForm() {
     }
 
     setSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    setSubmitting(false)
-    setSubmitted(true)
-    reset(defaults)
-    push({
-      title: 'Request captured locally',
-      message: siteConfig.forms.demoNotice,
-    })
+    try {
+      await api('/api/public/staffing-requests', { method: 'POST', body: JSON.stringify(values) })
+      setSubmitted(true)
+      reset(defaults)
+      push({ title: 'Request submitted', message: 'Staffora has your staffing brief.' })
+    } catch (error) {
+      push({ tone: 'error', title: 'Could not submit', message: error.message })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -97,7 +99,7 @@ export default function StaffingRequestForm() {
       <div className="mb-6 border-b border-line pb-5 sm:mb-8 sm:pb-6">
         <p className="eyebrow text-accent">Staffing request</p>
         <h3 className="mt-2 display-md">Tell us what you need</h3>
-        <p className="mt-2 max-w-3xl text-sm text-muted sm:mt-3">{siteConfig.forms.demoNotice}</p>
+        <p className="mt-2 max-w-3xl text-sm text-muted sm:mt-3">Tell us the roles you need. We save the request for the agency team.</p>
       </div>
 
       <div className="form-grid">
@@ -174,7 +176,7 @@ export default function StaffingRequestForm() {
       <div className="mt-6 space-y-5 border-t border-line pt-6 sm:mt-8">
         <FormCheckbox
           id="privacy"
-          label="I consent to Staffora processing this information to respond to my staffing enquiry. I understand this demo does not transmit data to a server."
+          label="I consent to Staffora processing this information to respond to my staffing enquiry."
           error={errors.privacy?.message}
           {...register('privacy')}
         />
@@ -182,11 +184,11 @@ export default function StaffingRequestForm() {
           <Button type="submit" disabled={submitting} className="w-full xs:w-auto">
             {submitting ? 'Submitting…' : 'Submit staffing request'}
           </Button>
-          {submitting ? <LoadingSpinner label="Validating locally" /> : null}
+          {submitting ? <LoadingSpinner label="Submitting" /> : null}
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Form validated successfully in your browser. No enquiry was sent or stored remotely.
+            Request saved. The agency team can review it.
           </p>
         ) : null}
       </div>

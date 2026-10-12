@@ -163,7 +163,7 @@ export default function EmployersPage() {
               className="max-w-2xl"
               eyebrow="Enquire"
               title="Submit a staffing request"
-              description="Share the essentials. This demonstration form validates in your browser only and does not send data to a server."
+              description="Share the roles you need. The request is saved for the agency team."
             />
             <div className="hidden w-full max-w-xs overflow-hidden rounded-2xl lg:block xl:max-w-sm">
               <OptimizedImage

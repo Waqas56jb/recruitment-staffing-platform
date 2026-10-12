@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
+import { panelUrl, readStoredSession } from '@staffora/auth'
 import { siteConfig } from '../../config/site'
 import { mainNav } from '../../data/nav'
 import { useScrollHeader } from '../../hooks/useScrollHeader'
@@ -15,6 +16,7 @@ export default function Header() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const solid = scrolled || !isHome || open
+  const session = readStoredSession()
 
   useEffect(() => {
     setOpen(false)
@@ -76,9 +78,35 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          {session ? (
+            <a
+              href={panelUrl(session)}
+              className={cn(
+                'rounded-md px-3 py-2 text-sm font-medium',
+                solid ? 'text-ink hover:bg-cream' : 'text-white hover:bg-white/10',
+              )}
+            >
+              My panel
+            </a>
+          ) : (
+            <Link
+              to="/login"
+              className={cn(
+                'rounded-md px-3 py-2 text-sm font-medium',
+                solid ? 'text-ink hover:bg-cream' : 'text-white hover:bg-white/10',
+              )}
+            >
+              Sign in
+            </Link>
+          )}
+          {session ? null : (
+            <Button to="/register" variant={solid ? 'secondary' : 'lightOutline'} size="sm">
+              Register
+            </Button>
+          )}
           <Button
             to={siteConfig.cta.findJob}
-            variant={solid ? 'secondary' : 'lightOutline'}
+            variant={solid ? 'outline' : 'lightOutline'}
             size="sm"
           >
             Find a Job

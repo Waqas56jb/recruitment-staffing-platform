@@ -16,6 +16,8 @@ export const employerLinks = [
 ]
 
 export const candidateLinks = [
+  { label: 'Sign in', to: '/login' },
+  { label: 'Register', to: '/register' },
   { label: 'Explore Careers', to: '/candidates' },
   { label: 'Browse Jobs', to: '/jobs' },
   { label: 'Register Interest', to: '/candidates#interest' },

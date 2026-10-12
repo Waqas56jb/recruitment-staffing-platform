@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { api } from '@staffora/api'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import IndustryCard from '../components/cards/IndustryCard'
@@ -16,7 +18,6 @@ import { siteConfig } from '../config/site'
 import { homeFaqs } from '../data/faqs'
 import { images } from '../data/images'
 import { industries } from '../data/industries'
-import { jobs } from '../data/jobs'
 import { howItWorks, whyChooseUs } from '../data/process'
 import { services } from '../data/services'
 import { usePageMeta } from '../hooks/usePageMeta'
@@ -33,6 +34,21 @@ export default function HomePage() {
     title: 'Home',
     description: siteConfig.seo.defaultDescription,
   })
+  const [jobs, setJobs] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    api('/api/public/jobs')
+      .then((data) => {
+        if (!cancelled) setJobs(Array.isArray(data) ? data.slice(0, 3) : [])
+      })
+      .catch(() => {
+        if (!cancelled) setJobs([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <>
@@ -216,8 +232,8 @@ export default function HomePage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
               eyebrow="Opportunities"
-              title="Featured sample listings"
-              description="Demonstration vacancies labelled clearly until genuine roles are supplied."
+              title="Featured roles"
+              description="Published vacancies from the Staffora board."
             />
             <Button to="/jobs" variant="secondary">
               Explore all jobs
@@ -227,6 +243,7 @@ export default function HomePage() {
             {jobs.slice(0, 3).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
+            {jobs.length ? null : <p className="text-sm text-muted">Published roles will appear here.</p>}
           </div>
         </Container>
       </section>
@@ -250,7 +267,7 @@ export default function HomePage() {
         tone="cream"
         eyebrow="Candidates"
         title="Your skills deserve the right opportunity"
-        description="Browse sample roles, register your interest, and prepare for live opportunities as the platform connects to backend systems."
+        description="Browse open roles, register your interest, and apply once you have a candidate account."
         image={images.candidateCta}
         actions={
           <>

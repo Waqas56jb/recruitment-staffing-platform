@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { panelUrl, readStoredSession } from '@staffora/auth'
 import { mainNav } from '../../data/nav'
 import { siteConfig } from '../../config/site'
 import { cn } from '../../utils/cn'
@@ -6,6 +7,7 @@ import Button from '../ui/Button'
 import Container from '../ui/Container'
 
 export default function MobileNav({ open, onNavigate, solid = true }) {
+  const session = readStoredSession()
   return (
     <div
       id="mobile-nav"
@@ -39,7 +41,21 @@ export default function MobileNav({ open, onNavigate, solid = true }) {
           </NavLink>
         ))}
         <div className="mt-3 grid gap-2 border-t border-line pt-4">
-          <Button to={siteConfig.cta.findJob} variant="secondary" onClick={onNavigate}>
+          {session ? (
+            <Button href={panelUrl(session)} variant="secondary" onClick={onNavigate}>
+              My panel
+            </Button>
+          ) : (
+            <>
+              <Button to="/login" variant="secondary" onClick={onNavigate}>
+                Sign in
+              </Button>
+              <Button to="/register" variant="outline" onClick={onNavigate}>
+                Register
+              </Button>
+            </>
+          )}
+          <Button to={siteConfig.cta.findJob} variant="outline" onClick={onNavigate}>
             Find a Job
           </Button>
           <Button to={siteConfig.cta.requestStaff} onClick={onNavigate}>

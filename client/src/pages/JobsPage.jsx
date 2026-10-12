@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { api } from '@staffora/api'
 import JobCard from '../components/cards/JobCard'
 import PageHero from '../components/sections/PageHero'
 import EmptyState from '../components/ui/EmptyState'
 import Container from '../components/ui/Container'
 import { images } from '../data/images'
-import { employmentTypes, jobCategories, jobs } from '../data/jobs'
+import { employmentTypes, jobCategories } from '../data/jobs'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 const sortOptions = [
@@ -17,18 +18,33 @@ const sortOptions = [
 export default function JobsPage() {
   usePageMeta({
     title: 'Jobs',
-    description: 'Browse sample Staffora vacancies. Filter by location, category, and employment type.',
+    description: 'Browse published Staffora vacancies. Filter by location, category, and employment type.',
   })
 
+  const [jobs, setJobs] = useState([])
   const [query, setQuery] = useState('')
   const [location, setLocation] = useState('')
   const [category, setCategory] = useState('')
   const [employmentType, setEmploymentType] = useState('')
   const [sort, setSort] = useState('newest')
 
+  useEffect(() => {
+    let cancelled = false
+    api('/api/public/jobs')
+      .then((data) => {
+        if (!cancelled) setJobs(Array.isArray(data) ? data : [])
+      })
+      .catch(() => {
+        if (!cancelled) setJobs([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const locations = useMemo(
     () => [...new Set(jobs.map((job) => job.location))].sort(),
-    [],
+    [jobs],
   )
 
   const filtered = useMemo(() => {
@@ -37,8 +53,8 @@ export default function JobsPage() {
       const matchesQuery =
         !q ||
         job.title.toLowerCase().includes(q) ||
-        job.summary.toLowerCase().includes(q) ||
-        job.department.toLowerCase().includes(q)
+        (job.summary || '').toLowerCase().includes(q) ||
+        (job.department || '').toLowerCase().includes(q)
       const matchesLocation = !location || job.location === location
       const matchesCategory = !category || job.category === category
       const matchesType = !employmentType || job.employmentType === employmentType
@@ -46,14 +62,14 @@ export default function JobsPage() {
     })
 
     list = [...list].sort((a, b) => {
-      if (sort === 'oldest') return a.postedAt.localeCompare(b.postedAt)
+      if (sort === 'oldest') return String(a.postedAt || '').localeCompare(String(b.postedAt || ''))
       if (sort === 'title-asc') return a.title.localeCompare(b.title)
       if (sort === 'title-desc') return b.title.localeCompare(a.title)
-      return b.postedAt.localeCompare(a.postedAt)
+      return String(b.postedAt || '').localeCompare(String(a.postedAt || ''))
     })
 
     return list
-  }, [query, location, category, employmentType, sort])
+  }, [jobs, query, location, category, employmentType, sort])
 
   return (
     <>
@@ -61,7 +77,7 @@ export default function JobsPage() {
         compact
         eyebrow="Careers"
         title="Find your next opportunity"
-        description="All listings below are sample demonstrations until genuine vacancies are supplied."
+        description="Published roles from Staffora. Use the filters to narrow the list."
         image={images.office}
       />
 
@@ -131,7 +147,7 @@ export default function JobsPage() {
 
           <div className="mt-8 flex items-center justify-between gap-4">
             <p className="text-sm text-muted">
-              Showing <strong className="text-ink">{filtered.length}</strong> sample listing
+              Showing <strong className="text-ink">{filtered.length}</strong> listing
               {filtered.length === 1 ? '' : 's'}
             </p>
             {(query || location || category || employmentType) && (
@@ -160,8 +176,8 @@ export default function JobsPage() {
           ) : (
             <div className="mt-8">
               <EmptyState
-                title="No matching sample listings"
-                description="Try a broader search or clear filters to see all demonstration vacancies."
+                title="No matching listings"
+                description="Try a broader search, or check back when new roles are published."
                 actionLabel="View all jobs"
                 actionTo="/jobs"
               />

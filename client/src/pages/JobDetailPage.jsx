@@ -1,24 +1,57 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { MapPin } from 'lucide-react'
+import { api } from '@staffora/api'
 import JobCard from '../components/cards/JobCard'
 import Badge from '../components/ui/Badge'
 import Button from '../components/ui/Button'
 import Container from '../components/ui/Container'
 import EmptyState from '../components/ui/EmptyState'
-import { getJobById, getRelatedJobs } from '../data/jobs'
 import { formatDate } from '../utils/format'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 export default function JobDetailPage() {
   const { id } = useParams()
-  const job = getJobById(id)
+  const [job, setJob] = useState(null)
+  const [related, setRelated] = useState([])
+  const [status, setStatus] = useState('loading')
+
+  useEffect(() => {
+    let cancelled = false
+    setStatus('loading')
+    Promise.all([api(`/api/public/jobs/${id}`), api('/api/public/jobs')])
+      .then(([item, list]) => {
+        if (cancelled) return
+        setJob(item)
+        const rows = Array.isArray(list) ? list : []
+        setRelated(rows.filter((row) => row.id !== item.id && (row.category === item.category || row.location === item.location)).slice(0, 3))
+        setStatus('ready')
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setJob(null)
+          setStatus('missing')
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [id])
 
   usePageMeta({
-    title: job ? job.title : 'Job not found',
+    title: job ? job.title : 'Job',
     description: job
-      ? `${job.title} — ${job.location}. Sample listing for demonstration purposes.`
-      : 'The requested job listing could not be found.',
+      ? `${job.title} — ${job.location}.`
+      : 'Published Staffora vacancy.',
   })
+
+  if (status === 'loading') {
+    return (
+      <section className="section-pad bg-cream pt-36">
+        <Container><p className="text-sm text-muted">Loading role…</p></Container>
+      </section>
+    )
+  }
 
   if (!job) {
     return (
@@ -26,7 +59,7 @@ export default function JobDetailPage() {
         <Container>
           <EmptyState
             title="Job not found"
-            description="This sample listing does not exist or may have been removed."
+            description="This role is not published, or it has been removed."
             actionLabel="Back to jobs"
             actionTo="/jobs"
           />
@@ -34,8 +67,6 @@ export default function JobDetailPage() {
       </section>
     )
   }
-
-  const related = getRelatedJobs(job)
 
   return (
     <>
@@ -82,7 +113,7 @@ export default function JobDetailPage() {
               <div>
                 <h2 className="display-md">Responsibilities</h2>
                 <ul className="mt-4 space-y-2 text-muted">
-                  {job.responsibilities.map((item) => (
+                  {(job.responsibilities || []).map((item) => (
                     <li key={item} className="flex gap-3">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                       {item}
@@ -93,7 +124,7 @@ export default function JobDetailPage() {
               <div>
                 <h2 className="display-md">Requirements</h2>
                 <ul className="mt-4 space-y-2 text-muted">
-                  {job.requirements.map((item) => (
+                  {(job.requirements || []).map((item) => (
                     <li key={item} className="flex gap-3">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                       {item}
@@ -108,8 +139,7 @@ export default function JobDetailPage() {
                 Application instructions
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                This is a sample listing. To express interest in similar roles, submit the candidate
-                form. Live applications, CV delivery, and employer routing require backend integration.
+                Create a candidate account to apply, or register your interest and the team will follow up.
               </p>
               <div className="mt-6">
                 <Button to="/candidates#interest" className="w-full">
@@ -126,7 +156,7 @@ export default function JobDetailPage() {
 
           {related.length ? (
             <div className="mt-16">
-              <h2 className="display-md">Related sample roles</h2>
+              <h2 className="display-md">Related roles</h2>
               <div className="mt-8 grid gap-5 md:grid-cols-3">
                 {related.map((item) => (
                   <JobCard key={item.id} job={item} />

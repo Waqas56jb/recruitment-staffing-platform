@@ -10,6 +10,8 @@ import IndustriesPage from './pages/IndustriesPage'
 import JobDetailPage from './pages/JobDetailPage'
 import JobsPage from './pages/JobsPage'
 import LegalPage from './pages/LegalPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ServicesPage from './pages/ServicesPage'
 
@@ -27,6 +29,8 @@ export default function App() {
           <Route path="industries" element={<IndustriesPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
           <Route path="privacy" element={<LegalPage type="privacy" />} />
           <Route path="cookies" element={<LegalPage type="cookies" />} />
           <Route path="terms" element={<LegalPage type="terms" />} />

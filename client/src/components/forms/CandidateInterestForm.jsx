@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { api } from '@staffora/api'
 import { siteConfig } from '../../config/site'
 import {
   collectErrors,
@@ -72,15 +73,24 @@ export default function CandidateInterestForm() {
     }
 
     setSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 900))
-    setSubmitting(false)
-    setSubmitted(true)
-    reset(defaults)
-    setCvFile(null)
-    push({
-      title: 'Interest captured locally',
-      message: siteConfig.forms.demoNotice,
-    })
+    try {
+      await api('/api/public/candidate-interest', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...values,
+          cvFileName: cvFile?.name || '',
+          cvSizeLabel: cvFile ? `${Math.ceil(cvFile.size / 1024)} KB` : '',
+        }),
+      })
+      setSubmitted(true)
+      reset(defaults)
+      setCvFile(null)
+      push({ title: 'Interest saved', message: 'The team can see your details. The CV file itself stays on this device.' })
+    } catch (error) {
+      push({ tone: 'error', title: 'Could not submit', message: error.message })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -156,7 +166,7 @@ export default function CandidateInterestForm() {
       <div className="mt-6 space-y-5 border-t border-line pt-6 sm:mt-8">
         <FormCheckbox
           id="candidate-privacy"
-          label="I consent to Staffora processing this information to respond to my expression of interest. I understand this demo does not transmit or store my CV remotely."
+          label="I consent to Staffora storing this interest. The CV file name is saved; the file itself stays on this device."
           error={errors.privacy?.message}
           {...register('privacy')}
         />
@@ -164,11 +174,11 @@ export default function CandidateInterestForm() {
           <Button type="submit" disabled={submitting} className="w-full xs:w-auto">
             {submitting ? 'Submitting…' : 'Submit interest'}
           </Button>
-          {submitting ? <LoadingSpinner label="Validating locally" /> : null}
+          {submitting ? <LoadingSpinner label="Submitting" /> : null}
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Interest form validated in your browser. No data was sent or stored remotely.
+            Interest saved. Create an account if you want to apply to published roles.
           </p>
         ) : null}
       </div>

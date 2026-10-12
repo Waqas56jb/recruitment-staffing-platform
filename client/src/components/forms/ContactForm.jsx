@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { api } from '@staffora/api'
 import { siteConfig } from '../../config/site'
 import {
   collectErrors,
@@ -60,14 +61,16 @@ export default function ContactForm() {
     }
 
     setSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    setSubmitting(false)
-    setSubmitted(true)
-    reset(defaults)
-    push({
-      title: 'Message captured locally',
-      message: siteConfig.forms.demoNotice,
-    })
+    try {
+      await api('/api/public/contact', { method: 'POST', body: JSON.stringify(values) })
+      setSubmitted(true)
+      reset(defaults)
+      push({ title: 'Message sent', message: 'The Staffora team can review this enquiry.' })
+    } catch (error) {
+      push({ tone: 'error', title: 'Could not send', message: error.message })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -106,7 +109,7 @@ export default function ContactForm() {
       <div className="mt-6 space-y-5 border-t border-line pt-6">
         <FormCheckbox
           id="contact-privacy"
-          label="I consent to Staffora processing this enquiry. I understand this demo does not transmit data to a server."
+          label="I consent to Staffora processing this enquiry."
           error={errors.privacy?.message}
           {...register('privacy')}
         />
@@ -118,7 +121,7 @@ export default function ContactForm() {
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Message validated locally. No enquiry was sent or stored remotely.
+            Message saved. The team will review it.
           </p>
         ) : null}
       </div>
