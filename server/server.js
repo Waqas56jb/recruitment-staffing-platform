@@ -70,7 +70,17 @@ const ROLES_MATRIX = [
   { role: 'Finance Manager', modules: ['Invoices', 'Reports', 'Documents'] },
 ]
 
-const PORTALS = new Set(['http://localhost:5177', 'http://localhost:5178', 'http://localhost:5179', 'http://localhost:5184'])
+const PORTALS = new Set([
+  'http://localhost:5177',
+  'http://localhost:5178',
+  'http://localhost:5179',
+  'http://localhost:5184',
+  'https://recruitment-staffing-platform-clien.vercel.app',
+  'https://recruitment-staffing-platform-emplo.vercel.app',
+  'https://recruitment-staffing-platform-candi.vercel.app',
+  'https://recruitment-staffing-platform-admin-us-4e8d.vercel.app',
+  ...String(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean),
+])
 
 const pool = new Pool({
   host: process.env.PGHOST,

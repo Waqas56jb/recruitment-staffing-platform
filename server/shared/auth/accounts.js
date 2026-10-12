@@ -2,11 +2,31 @@ import { api, setToken } from '../api.js'
 
 const SESSION_COOKIE = 'staffora_session'
 
-export const PORTALS = {
+const localPortals = {
   public: 'http://localhost:5177',
   employee: 'http://localhost:5178',
   candidate: 'http://localhost:5179',
   admin: 'http://localhost:5184',
+}
+
+const productionPortals = {
+  public: 'https://recruitment-staffing-platform-clien.vercel.app',
+  employee: 'https://recruitment-staffing-platform-emplo.vercel.app',
+  candidate: 'https://recruitment-staffing-platform-candi.vercel.app',
+  admin: 'https://recruitment-staffing-platform-admin-us-4e8d.vercel.app',
+}
+
+function portalOrigin(name, envValue) {
+  const configured = String(envValue || '').trim().replace(/\/$/, '')
+  if (configured) return configured
+  return import.meta.env.DEV ? localPortals[name] : productionPortals[name]
+}
+
+export const PORTALS = {
+  public: portalOrigin('public', import.meta.env.VITE_PUBLIC_URL),
+  employee: portalOrigin('employee', import.meta.env.VITE_EMPLOYEE_URL),
+  candidate: portalOrigin('candidate', import.meta.env.VITE_CANDIDATE_URL),
+  admin: portalOrigin('admin', import.meta.env.VITE_ADMIN_URL),
 }
 
 export const ROLES = {

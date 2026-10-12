@@ -1,4 +1,7 @@
-export const API_ORIGIN = 'http://localhost:5080'
+const configuredOrigin = import.meta.env.VITE_API_ORIGIN
+export const API_ORIGIN = String(
+  configuredOrigin || (import.meta.env.DEV ? 'http://localhost:5080' : 'https://recruitment-staffing-platform.vercel.app'),
+).replace(/\/$/, '')
 const TOKEN_KEY = 'staffora-token'
 
 export function getToken() {
