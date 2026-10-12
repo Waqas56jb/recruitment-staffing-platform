@@ -5,8 +5,10 @@ import DataTable from '../components/ui/DataTable'
 import PageHeader from '../components/ui/PageHeader'
 import Pagination from '../components/ui/Pagination'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 
 export default function CandidatesPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const [q, setQ] = useState('')
   const [page, setPage] = useState(1)
@@ -14,14 +16,14 @@ export default function CandidatesPage() {
   const slice = rows.slice((page - 1) * 5, page * 5)
   return (
     <div>
-      <PageHeader title="Candidates" description="Talent pool for agency recruiters (demo)." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Candidates' }]} />
-      <input className="input-field mb-4 max-w-md" placeholder="Search candidates" value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
+      <PageHeader title={t('Candidates')} description={t('Talent pool for agency recruiters (demo).')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Candidates') }]} />
+      <input className="input-field mb-4 max-w-md" placeholder={t('Search candidates')} aria-label={t('Search candidates')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
       <DataTable rows={slice} columns={[
-        { key: 'fullName', label: 'Candidate', render: (c) => <Link className="font-medium hover:text-accent" to={`/candidates/${c.id}`}>{c.fullName}</Link> },
-        { key: 'city', label: 'Location' },
-        { key: 'availability', label: 'Availability' },
-        { key: 'status', label: 'Status', render: (c) => <Badge tone={statusTone(c.status)}>{c.status}</Badge> },
-        { key: 'skills', label: 'Skills', render: (c) => c.skills.slice(0, 3).join(', ') },
+        { key: 'fullName', label: t('Candidate'), render: (c) => <Link className="font-medium hover:text-accent" to={`/candidates/${c.id}`}>{c.fullName}</Link> },
+        { key: 'city', label: t('Location') },
+        { key: 'availability', label: t('Availability'), render: (c) => t(c.availability) },
+        { key: 'status', label: t('Status'), render: (c) => <Badge tone={statusTone(c.status)}>{t(c.status)}</Badge> },
+        { key: 'skills', label: t('Skills'), render: (c) => c.skills.slice(0, 3).join(', ') },
       ]} />
       <Pagination page={page} pageSize={5} total={rows.length} onChange={setPage} />
     </div>

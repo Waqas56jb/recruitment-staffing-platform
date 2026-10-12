@@ -1,22 +1,25 @@
 import Button from './Button'
 import Modal from './Modal'
+import { useI18n } from '../../i18n'
 
-export default function ConfirmDialog({ open, title, message, confirmLabel = 'Confirm', tone = 'primary', onConfirm, onClose, loading, children }) {
+export default function ConfirmDialog({ open, title, message, confirmLabel, tone = 'primary', onConfirm, onClose, loading, children }) {
+  const { t } = useI18n()
+  const tr = (v) => (typeof v === 'string' ? t(v) : v)
   return (
     <Modal
       open={open}
-      title={title}
+      title={tr(title)}
       onClose={onClose}
       footer={
         <>
-          <Button variant="outline" onClick={onClose} disabled={loading}>Cancel</Button>
+          <Button variant="outline" onClick={onClose} disabled={loading}>{t('Cancel')}</Button>
           <Button variant={tone === 'danger' ? 'danger' : 'primary'} onClick={onConfirm} disabled={loading}>
-            {loading ? 'Working…' : confirmLabel}
+            {loading ? t('Working…') : tr(confirmLabel ?? 'Confirm')}
           </Button>
         </>
       }
     >
-      {message ? <p className="text-muted">{message}</p> : null}
+      {message ? <p className="text-muted">{tr(message)}</p> : null}
       {children}
     </Modal>
   )

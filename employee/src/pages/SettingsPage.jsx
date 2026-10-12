@@ -5,9 +5,11 @@ import Field from '../components/ui/Field'
 import PageHeader from '../components/ui/PageHeader'
 import { useToast } from '../components/ui/Toast'
 import { useAuth } from '../context/AuthContext'
+import { useI18n } from '../i18n'
 import { api } from '@staffora/api'
 
 export default function SettingsPage() {
+  const { t } = useI18n()
   const { user } = useAuth()
   const { push } = useToast()
   const [emailAlerts, setEmailAlerts] = useState(true)
@@ -26,35 +28,35 @@ export default function SettingsPage() {
   const save = async () => {
     try {
       await api('/api/me/settings', { method: 'PATCH', body: JSON.stringify({ emailAlerts, timesheetReminders, invoiceAlerts }) })
-      push({ title: 'Preferences saved', message: 'Notification settings are stored on your account.' })
+      push({ title: t('Preferences saved'), message: t('Notification settings are stored on your account.') })
     } catch (error) {
-      push({ title: 'Could not save', message: error.message, tone: 'error' })
+      push({ title: t('Could not save'), message: t(error.message), tone: 'error' })
     }
   }
 
   return (
     <div>
-      <PageHeader title="Settings" description="Account preferences stored in Staffora." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Settings' }]} />
+      <PageHeader title={t('Settings')} description={t('Account preferences stored in Staffora.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Settings') }]} />
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="space-y-4">
-          <h2 className="font-display text-lg font-semibold">Account</h2>
-          <p className="text-sm"><strong>Name:</strong> {user?.name}</p>
-          <p className="text-sm"><strong>Email:</strong> {user?.email}</p>
-          <p className="text-sm"><strong>Role:</strong> {user?.role}</p>
-          <p className="text-xs text-muted">A super admin can reset a password from the admin users page.</p>
+          <h2 className="font-display text-lg font-semibold">{t('Account')}</h2>
+          <p className="text-sm"><strong>{t('Name:')}</strong> {user?.name}</p>
+          <p className="text-sm"><strong>{t('Email:')}</strong> {user?.email}</p>
+          <p className="text-sm"><strong>{t('Role:')}</strong> {user?.role ? t(user.role) : ''}</p>
+          <p className="text-xs text-muted">{t('A super admin can reset a password from the admin users page.')}</p>
         </Card>
         <Card className="space-y-4">
-          <h2 className="font-display text-lg font-semibold">Notifications</h2>
-          <Field id="emailAlerts" label="Email digest (simulated)">
-            <label className="flex items-center gap-2 text-sm"><input id="emailAlerts" type="checkbox" checked={emailAlerts} onChange={(e) => setEmailAlerts(e.target.checked)} /> Enabled</label>
+          <h2 className="font-display text-lg font-semibold">{t('Notifications')}</h2>
+          <Field id="emailAlerts" label={t('Email digest (simulated)')}>
+            <label className="flex items-center gap-2 text-sm"><input id="emailAlerts" type="checkbox" checked={emailAlerts} onChange={(e) => setEmailAlerts(e.target.checked)} /> {t('Enabled')}</label>
           </Field>
-          <Field id="ts" label="Timesheet reminders">
-            <label className="flex items-center gap-2 text-sm"><input id="ts" type="checkbox" checked={timesheetReminders} onChange={(e) => setTimesheetReminders(e.target.checked)} /> Enabled</label>
+          <Field id="ts" label={t('Timesheet reminders')}>
+            <label className="flex items-center gap-2 text-sm"><input id="ts" type="checkbox" checked={timesheetReminders} onChange={(e) => setTimesheetReminders(e.target.checked)} /> {t('Enabled')}</label>
           </Field>
-          <Field id="inv" label="Invoice alerts">
-            <label className="flex items-center gap-2 text-sm"><input id="inv" type="checkbox" checked={invoiceAlerts} onChange={(e) => setInvoiceAlerts(e.target.checked)} /> Enabled</label>
+          <Field id="inv" label={t('Invoice alerts')}>
+            <label className="flex items-center gap-2 text-sm"><input id="inv" type="checkbox" checked={invoiceAlerts} onChange={(e) => setInvoiceAlerts(e.target.checked)} /> {t('Enabled')}</label>
           </Field>
-          <Button onClick={save}>Save preferences</Button>
+          <Button onClick={save}>{t('Save preferences')}</Button>
         </Card>
       </div>
     </div>

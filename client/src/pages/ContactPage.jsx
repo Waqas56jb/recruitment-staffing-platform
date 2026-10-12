@@ -5,37 +5,39 @@ import SectionHeading from '../components/ui/SectionHeading'
 import { siteConfig } from '../config/site'
 import { images } from '../data/images'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 export default function ContactPage() {
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Contact',
-    description: 'Contact Staffora for employer staffing requests, candidate enquiries, and general questions.',
+    title: t('Contact'),
+    description: t('Contact Staffora for employer staffing requests, candidate enquiries, and general questions.'),
   })
 
   const details = [
     {
-      label: 'Email',
-      value: siteConfig.contact.email || 'Configure in site settings',
+      label: t('Email'),
+      value: siteConfig.contact.email || t('Configure in site settings'),
       href: siteConfig.contact.email ? `mailto:${siteConfig.contact.email}` : undefined,
     },
     {
-      label: 'Phone',
-      value: siteConfig.contact.phoneDisplay || 'Not configured yet',
+      label: t('Phone'),
+      value: siteConfig.contact.phoneDisplay || t('Not configured yet'),
       href: siteConfig.contact.phone ? `tel:${siteConfig.contact.phone}` : undefined,
     },
     {
       label: 'WhatsApp',
-      value: 'Chat on WhatsApp',
+      value: t('Chat on WhatsApp'),
       href: siteConfig.contact.whatsapp,
       external: true,
     },
     {
-      label: 'Address',
-      value: siteConfig.contact.address || 'Not configured yet',
+      label: t('Address'),
+      value: siteConfig.contact.address || t('Not configured yet'),
     },
     {
-      label: 'Hours',
-      value: siteConfig.contact.hours || 'Not configured yet',
+      label: t('Hours'),
+      value: siteConfig.contact.hours ? t(siteConfig.contact.hours) : t('Not configured yet'),
     },
   ]
 
@@ -43,9 +45,9 @@ export default function ContactPage() {
     <>
       <PageHero
         compact
-        eyebrow="Contact"
-        title="Let’s talk about your workforce needs"
-        description="Send a message, email the team, or start a WhatsApp chat."
+        eyebrow={t('Contact')}
+        title={t('Let’s talk about your workforce needs')}
+        description={t('Send a message, email the team, or start a WhatsApp chat.')}
         image={images.desk}
       />
 
@@ -55,9 +57,9 @@ export default function ContactPage() {
             <div className="min-w-0">
               <SectionHeading
                 className="max-w-none"
-                eyebrow="Details"
-                title="How to reach Staffora"
-                description="Update genuine contact details in `src/config/site.js` before launch."
+                eyebrow={t('Details')}
+                title={t('How to reach Staffora')}
+                description={t('Update genuine contact details in `src/config/site.js` before launch.')}
               />
               <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:mt-8 lg:grid-cols-1">
                 {details.map((item) => (

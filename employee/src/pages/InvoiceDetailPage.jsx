@@ -5,13 +5,15 @@ import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import PageHeader from '../components/ui/PageHeader'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { formatDate, formatMoney } from '../utils/format'
 
 export default function InvoiceDetailPage() {
+  const { t } = useI18n()
   const { id } = useParams()
   const { state } = useData()
   const invoice = state.invoices.find((i) => i.id === id && i.companyId === state.companyId)
-  if (!invoice) return <EmptyState title="Invoice not found" actionLabel="Back" actionTo="/invoices" />
+  if (!invoice) return <EmptyState title={t('Invoice not found')} actionLabel={t('Back')} actionTo="/invoices" />
   const company = state.companies.find((c) => c.id === invoice.companyId)
 
   return (
@@ -19,29 +21,29 @@ export default function InvoiceDetailPage() {
       <PageHeader
         title={invoice.number}
         description={invoice.engagementLabel}
-        breadcrumbs={[{ label: 'Invoices', to: '/invoices' }, { label: invoice.number }]}
-        actions={<Button variant="outline" onClick={() => window.print()}>Print / PDF</Button>}
+        breadcrumbs={[{ label: t('Invoices'), to: '/invoices' }, { label: invoice.number }]}
+        actions={<Button variant="outline" onClick={() => window.print()}>{t('Print / PDF')}</Button>}
       />
-      <div className="mb-4"><Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge></div>
+      <div className="mb-4"><Badge tone={statusTone(invoice.status)}>{t(invoice.status)}</Badge></div>
       <Card className="print:border-0 print:shadow-none space-y-6 p-6" id="invoice-print">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-4">
           <div>
             <p className="font-display text-2xl font-semibold">Staffora</p>
-            <p className="text-sm text-muted">Demonstration invoice — not a tax document</p>
+            <p className="text-sm text-muted">{t('Demonstration invoice — not a tax document')}</p>
           </div>
           <div className="text-sm text-right">
-            <p><strong>Issue:</strong> {formatDate(invoice.issueDate)}</p>
-            <p><strong>Due:</strong> {formatDate(invoice.dueDate)}</p>
+            <p><strong>{t('Issue:')}</strong> {formatDate(invoice.issueDate)}</p>
+            <p><strong>{t('Due:')}</strong> {formatDate(invoice.dueDate)}</p>
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 text-sm">
           <div>
-            <p className="font-display text-xs font-semibold text-muted">Bill to</p>
+            <p className="font-display text-xs font-semibold text-muted">{t('Bill to')}</p>
             <p className="mt-1 font-medium">{company?.name}</p>
             <p className="text-muted">{company?.billingAddress}</p>
           </div>
           <div>
-            <p className="font-display text-xs font-semibold text-muted">Engagement</p>
+            <p className="font-display text-xs font-semibold text-muted">{t('Engagement')}</p>
             <p className="mt-1">{invoice.engagementLabel}</p>
           </div>
         </div>
@@ -49,10 +51,10 @@ export default function InvoiceDetailPage() {
           <table className="min-w-full text-sm">
             <thead className="bg-cream/70 text-xs text-muted">
               <tr>
-                <th className="px-4 py-3 text-left">Description</th>
-                <th className="px-4 py-3 text-right">Qty</th>
-                <th className="px-4 py-3 text-right">Rate</th>
-                <th className="px-4 py-3 text-right">Amount</th>
+                <th className="px-4 py-3 text-left">{t('Description')}</th>
+                <th className="px-4 py-3 text-right">{t('Qty')}</th>
+                <th className="px-4 py-3 text-right">{t('Rate')}</th>
+                <th className="px-4 py-3 text-right">{t('Amount')}</th>
               </tr>
             </thead>
             <tbody>
@@ -68,9 +70,9 @@ export default function InvoiceDetailPage() {
           </table>
         </div>
         <div className="ml-auto max-w-xs space-y-1 text-sm">
-          <p className="flex justify-between"><span>Subtotal</span><span>{formatMoney(invoice.subtotal)}</span></p>
-          <p className="flex justify-between"><span>Tax ({Math.round((invoice.taxRate || 0) * 100)}%)</span><span>{formatMoney(invoice.tax)}</span></p>
-          <p className="flex justify-between border-t border-line pt-2 font-display text-lg font-semibold"><span>Total</span><span>{formatMoney(invoice.total)}</span></p>
+          <p className="flex justify-between"><span>{t('Subtotal')}</span><span>{formatMoney(invoice.subtotal)}</span></p>
+          <p className="flex justify-between"><span>{t('Tax ({rate}%)', { rate: Math.round((invoice.taxRate || 0) * 100) })}</span><span>{formatMoney(invoice.tax)}</span></p>
+          <p className="flex justify-between border-t border-line pt-2 font-display text-lg font-semibold"><span>{t('Total')}</span><span>{formatMoney(invoice.total)}</span></p>
         </div>
       </Card>
     </div>

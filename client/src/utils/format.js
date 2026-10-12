@@ -1,6 +1,8 @@
+import { getLocale } from '../i18n'
+
 export function formatDate(iso) {
   try {
-    return new Intl.DateTimeFormat('en-GB', {
+    return new Intl.DateTimeFormat(getLocale(), {
       day: 'numeric',
       month: 'short',
       year: 'numeric',

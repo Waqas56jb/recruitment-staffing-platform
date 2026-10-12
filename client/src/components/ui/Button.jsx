@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 const variants = {
   primary: 'bg-accent text-white hover:bg-accent-hover',
@@ -27,6 +28,8 @@ export default function Button({
   type = 'button',
   ...props
 }) {
+  const { t } = useI18n()
+  const content = typeof children === 'string' ? t(children) : children
   const classes = cn(
     'inline-flex items-center justify-center gap-2 rounded-md font-medium transition duration-200 disabled:cursor-not-allowed disabled:opacity-60',
     variants[variant],
@@ -37,7 +40,7 @@ export default function Button({
   if (to) {
     return (
       <Link to={to} className={classes} {...props}>
-        {children}
+        {content}
       </Link>
     )
   }
@@ -45,14 +48,14 @@ export default function Button({
   if (href || as === 'a') {
     return (
       <a href={href} className={classes} {...props}>
-        {children}
+        {content}
       </a>
     )
   }
 
   return (
     <button type={type} className={classes} {...props}>
-      {children}
+      {content}
     </button>
   )
 }

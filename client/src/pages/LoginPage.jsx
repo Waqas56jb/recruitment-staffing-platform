@@ -4,6 +4,7 @@ import { authenticate, redirectToPanel } from '@staffora/auth'
 import Button from '../components/ui/Button'
 import Container from '../components/ui/Container'
 import { email as emailRule, required } from '../utils/validation'
+import { useI18n } from '../i18n'
 
 const DEMO_ACCOUNTS = [
   { panel: 'Admin', email: 'admin.demo@staffora.com', password: 'DemoAdmin1' },
@@ -12,6 +13,7 @@ const DEMO_ACCOUNTS = [
 ]
 
 export default function LoginPage() {
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
@@ -55,30 +57,30 @@ export default function LoginPage() {
       <Container className="max-w-lg">
         <form onSubmit={onSubmit} className="form-panel" noValidate>
           <p className="eyebrow">Staffora</p>
-          <h1 className="mt-2 text-3xl">Sign in</h1>
+          <h1 className="mt-2 text-3xl">{t('Sign in')}</h1>
           <p className="mt-2 text-sm text-muted">
-            Candidates, employers, and agency staff use this page. Your account opens the matching panel.
+            {t('Candidates, employers, and agency staff use this page. Your account opens the matching panel.')}
           </p>
           <div className="mt-6 space-y-4">
             <label className="block text-sm font-medium" htmlFor="email">
-              Email
+              {t('Email')}
               <input id="email" type="email" autoComplete="username" className="input-field mt-1" value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={errors.email ? 'true' : undefined} />
-              {errors.email ? <span className="mt-1 block text-sm text-accent">{errors.email}</span> : null}
+              {errors.email ? <span className="mt-1 block text-sm text-accent">{t(errors.email)}</span> : null}
             </label>
             <label className="block text-sm font-medium" htmlFor="password">
-              Password
+              {t('Password')}
               <input id="password" type="password" autoComplete="current-password" className="input-field mt-1" value={password} onChange={(event) => setPassword(event.target.value)} aria-invalid={errors.password ? 'true' : undefined} />
-              {errors.password ? <span className="mt-1 block text-sm text-accent">{errors.password}</span> : null}
+              {errors.password ? <span className="mt-1 block text-sm text-accent">{t(errors.password)}</span> : null}
             </label>
           </div>
-          {formError ? <p className="mt-4 text-sm text-accent" role="alert">{formError}</p> : null}
-          <Button type="submit" className="mt-6 w-full">Sign in</Button>
+          {formError ? <p className="mt-4 text-sm text-accent" role="alert">{t(formError)}</p> : null}
+          <Button type="submit" className="mt-6 w-full">{t('Sign in')}</Button>
           <p className="mt-4 text-sm text-muted">
-            New candidate? <Link className="font-medium text-accent" to="/register">Create an account</Link>
+            {t('New candidate?')} <Link className="font-medium text-accent" to="/register">{t('Create an account')}</Link>
           </p>
           <div className="mt-6 border-t border-line pt-5">
-            <p className="text-sm font-medium">Try a demo panel</p>
-            <p className="mt-1 text-sm text-muted">Click an account to sign in and open that panel.</p>
+            <p className="text-sm font-medium">{t('Try a demo panel')}</p>
+            <p className="mt-1 text-sm text-muted">{t('Click an account to sign in and open that panel.')}</p>
             <div className="mt-3 grid gap-2">
               {DEMO_ACCOUNTS.map((account) => (
                 <button
@@ -88,7 +90,7 @@ export default function LoginPage() {
                   disabled={Boolean(busyPanel)}
                   onClick={() => openDemo(account)}
                 >
-                  <span className="font-semibold">{busyPanel === account.panel ? 'Opening…' : account.panel}</span>
+                  <span className="font-semibold">{busyPanel === account.panel ? t('Opening…') : t(account.panel)}</span>
                   <span className="mt-0.5 block text-muted">{account.email}</span>
                   <span className="block text-muted">{account.password}</span>
                 </button>

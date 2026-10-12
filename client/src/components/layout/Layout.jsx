@@ -4,8 +4,10 @@ import { siteConfig } from '../../config/site'
 import CookieBanner from './CookieBanner'
 import Footer from './Footer'
 import Header from './Header'
+import { useI18n } from '../../i18n'
 
 export default function Layout() {
+  const { t } = useI18n()
   const location = useLocation()
 
   useEffect(() => {
@@ -34,6 +36,7 @@ export default function Layout() {
           href={siteConfig.contact.whatsapp}
           target="_blank"
           rel="noreferrer"
+          aria-label={t('Chat with us on WhatsApp')}
           className="fixed bottom-24 right-5 z-[80] rounded-full bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-lift hover:bg-[#1ebe5d]"
         >
           WhatsApp

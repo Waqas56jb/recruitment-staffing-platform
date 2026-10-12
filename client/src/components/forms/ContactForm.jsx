@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { api } from '@staffora/api'
+import { useI18n } from '../../i18n'
 import { siteConfig } from '../../config/site'
 import {
   collectErrors,
@@ -26,6 +27,7 @@ const defaults = {
 
 export default function ContactForm() {
   const { push } = useToast()
+  const { t } = useI18n()
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const {
@@ -54,8 +56,8 @@ export default function ContactForm() {
       keys.forEach((key) => setError(key, { type: 'manual', message: nextErrors[key] }))
       push({
         tone: 'error',
-        title: 'Check the form',
-        message: 'Please correct the highlighted fields.',
+        title: t('Check the form'),
+        message: t('Please correct the highlighted fields.'),
       })
       return
     }
@@ -65,9 +67,9 @@ export default function ContactForm() {
       await api('/api/public/contact', { method: 'POST', body: JSON.stringify(values) })
       setSubmitted(true)
       reset(defaults)
-      push({ title: 'Message sent', message: 'The Staffora team can review this enquiry.' })
+      push({ title: t('Message sent'), message: t('The Staffora team can review this enquiry.') })
     } catch (error) {
-      push({ tone: 'error', title: 'Could not send', message: error.message })
+      push({ tone: 'error', title: t('Could not send'), message: t(error.message) })
     } finally {
       setSubmitting(false)
     }
@@ -79,7 +81,7 @@ export default function ContactForm() {
       noValidate
       className="form-panel"
     >
-      <p className="mb-5 text-sm text-muted sm:mb-6">{siteConfig.forms.demoNotice}</p>
+      <p className="mb-5 text-sm text-muted sm:mb-6">{t(siteConfig.forms.demoNotice)}</p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
         <FormField id="name" label="Name" required error={errors.name?.message}>
           <FormInput id="name" autoComplete="name" error={errors.name} {...register('name')} />
@@ -92,11 +94,11 @@ export default function ContactForm() {
         </FormField>
         <FormField id="enquiryType" label="Enquiry type" required error={errors.enquiryType?.message}>
           <FormSelect id="enquiryType" error={errors.enquiryType} {...register('enquiryType')}>
-            <option value="">Select type</option>
-            <option>Employer staffing request</option>
-            <option>Candidate enquiry</option>
-            <option>Partnership</option>
-            <option>General</option>
+            <option value="">{t('Select type')}</option>
+            <option value="Employer staffing request">{t('Employer staffing request')}</option>
+            <option value="Candidate enquiry">{t('Candidate enquiry')}</option>
+            <option value="Partnership">{t('Partnership')}</option>
+            <option value="General">{t('General')}</option>
           </FormSelect>
         </FormField>
         <FormField id="subject" label="Subject" required error={errors.subject?.message} className="sm:col-span-2">
@@ -115,13 +117,13 @@ export default function ContactForm() {
         />
         <div className="flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:items-center">
           <Button type="submit" disabled={submitting} className="w-full xs:w-auto">
-            {submitting ? 'Sending…' : 'Send message'}
+            {submitting ? t('Sending…') : t('Send message')}
           </Button>
-          {submitting ? <LoadingSpinner /> : null}
+          {submitting ? <LoadingSpinner label={t('Sending')} /> : null}
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Message saved. The team will review it.
+            {t('Message saved. The team will review it.')}
           </p>
         ) : null}
       </div>

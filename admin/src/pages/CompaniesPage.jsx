@@ -9,9 +9,11 @@ import PageHeader from '../components/ui/PageHeader'
 import Pagination from '../components/ui/Pagination'
 import { useToast } from '../components/ui/Toast'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { email as emailRule, required } from '../utils/validation'
 
 export default function CompaniesPage() {
+  const { t } = useI18n()
   const { state, createCompany } = useData()
   const { push } = useToast()
   const [q, setQ] = useState('')
@@ -36,33 +38,33 @@ export default function CompaniesPage() {
       await createCompany({ ...form, status: 'Active', workLocations: [], website: '', billingAddress: '' })
       setForm({ name: '', contactName: '', email: '', phone: '', industry: '' })
       setOpen(false)
-      push({ title: 'Company saved', message: 'You can now publish jobs and provision an employer login.' })
+      push({ title: t('Company saved'), message: t('You can now publish jobs and provision an employer login.') })
     } catch (error) {
-      push({ title: 'Could not create company', message: error.message, tone: 'error' })
+      push({ title: t('Could not create company'), message: t(error.message), tone: 'error' })
     }
   }
 
   return (
     <div>
-      <PageHeader title="Companies" description="Employer organisations stored in Staffora." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Companies' }]} actions={<Button onClick={() => setOpen((value) => !value)}>{open ? 'Close' : 'New company'}</Button>} />
+      <PageHeader title={t('Companies')} description={t('Employer organisations stored in Staffora.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Companies') }]} actions={<Button onClick={() => setOpen((value) => !value)}>{open ? t('Close') : t('New company')}</Button>} />
       {open ? (
         <Card className="mb-6">
           <form onSubmit={save} className="grid gap-4 md:grid-cols-2">
-            <Field id="name" label="Company name" required error={errors.name}><input id="name" className="input-field" value={form.name} onChange={(event) => set('name', event.target.value)} /></Field>
-            <Field id="contactName" label="Contact" required error={errors.contactName}><input id="contactName" className="input-field" value={form.contactName} onChange={(event) => set('contactName', event.target.value)} /></Field>
-            <Field id="email" label="Email" required error={errors.email}><input id="email" type="email" className="input-field" value={form.email} onChange={(event) => set('email', event.target.value)} /></Field>
-            <Field id="phone" label="Phone"><input id="phone" className="input-field" value={form.phone} onChange={(event) => set('phone', event.target.value)} /></Field>
-            <Field id="industry" label="Industry"><input id="industry" className="input-field" value={form.industry} onChange={(event) => set('industry', event.target.value)} /></Field>
-            <div className="md:col-span-2"><Button type="submit">Save company</Button></div>
+            <Field id="name" label={t('Company name')} required error={t(errors.name)}><input id="name" className="input-field" value={form.name} onChange={(event) => set('name', event.target.value)} /></Field>
+            <Field id="contactName" label={t('Contact')} required error={t(errors.contactName)}><input id="contactName" className="input-field" value={form.contactName} onChange={(event) => set('contactName', event.target.value)} /></Field>
+            <Field id="email" label={t('Email')} required error={t(errors.email)}><input id="email" type="email" className="input-field" value={form.email} onChange={(event) => set('email', event.target.value)} /></Field>
+            <Field id="phone" label={t('Phone')}><input id="phone" className="input-field" value={form.phone} onChange={(event) => set('phone', event.target.value)} /></Field>
+            <Field id="industry" label={t('Industry')}><input id="industry" className="input-field" value={form.industry} onChange={(event) => set('industry', event.target.value)} /></Field>
+            <div className="md:col-span-2"><Button type="submit">{t('Save company')}</Button></div>
           </form>
         </Card>
       ) : null}
-      <input className="input-field mb-4 max-w-md" placeholder="Search companies" value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
+      <input className="input-field mb-4 max-w-md" placeholder={t('Search companies')} aria-label={t('Search companies')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
       <DataTable rows={slice} columns={[
-        { key: 'name', label: 'Company', render: (c) => <Link className="font-medium hover:text-accent" to={`/companies/${c.id}`}>{c.name}</Link> },
-        { key: 'industry', label: 'Industry' },
-        { key: 'contactName', label: 'Contact' },
-        { key: 'status', label: 'Status', render: (c) => <Badge tone={statusTone(c.status)}>{c.status}</Badge> },
+        { key: 'name', label: t('Company'), render: (c) => <Link className="font-medium hover:text-accent" to={`/companies/${c.id}`}>{c.name}</Link> },
+        { key: 'industry', label: t('Industry'), render: (c) => t(c.industry) },
+        { key: 'contactName', label: t('Contact') },
+        { key: 'status', label: t('Status'), render: (c) => <Badge tone={statusTone(c.status)}>{t(c.status)}</Badge> },
       ]} />
       <Pagination page={page} pageSize={5} total={rows.length} onChange={setPage} />
     </div>

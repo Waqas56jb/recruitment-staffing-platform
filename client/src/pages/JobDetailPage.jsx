@@ -9,8 +9,10 @@ import Container from '../components/ui/Container'
 import EmptyState from '../components/ui/EmptyState'
 import { formatDate } from '../utils/format'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 export default function JobDetailPage() {
+  const { t } = useI18n()
   const { id } = useParams()
   const [job, setJob] = useState(null)
   const [related, setRelated] = useState([])
@@ -39,16 +41,16 @@ export default function JobDetailPage() {
   }, [id])
 
   usePageMeta({
-    title: job ? job.title : 'Job',
+    title: job ? job.title : t('Job'),
     description: job
       ? `${job.title} — ${job.location}.`
-      : 'Published Staffora vacancy.',
+      : t('Published Staffora vacancy.'),
   })
 
   if (status === 'loading') {
     return (
       <section className="section-pad bg-cream pt-36">
-        <Container><p className="text-sm text-muted">Loading role…</p></Container>
+        <Container><p className="text-sm text-muted">{t('Loading role…')}</p></Container>
       </section>
     )
   }
@@ -58,9 +60,9 @@ export default function JobDetailPage() {
       <section className="section-pad bg-cream pt-36">
         <Container>
           <EmptyState
-            title="Job not found"
-            description="This role is not published, or it has been removed."
-            actionLabel="Back to jobs"
+            title={t('Job not found')}
+            description={t('This role is not published, or it has been removed.')}
+            actionLabel={t('Back to jobs')}
             actionTo="/jobs"
           />
         </Container>
@@ -74,14 +76,14 @@ export default function JobDetailPage() {
         <Container className="pb-14">
           <p className="text-sm text-cream/60">
             <Link to="/jobs" className="hover:text-cream">
-              Jobs
+              {t('Jobs')}
             </Link>{' '}
             / {job.title}
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
-            {job.isSample ? <Badge tone="gold">Sample Listing</Badge> : null}
-            <Badge tone="soft">{job.employmentType}</Badge>
-            <Badge tone="soft">{job.category}</Badge>
+            {job.isSample ? <Badge tone="gold">{t('Sample Listing')}</Badge> : null}
+            <Badge tone="soft">{t(job.employmentType)}</Badge>
+            <Badge tone="soft">{t(job.category)}</Badge>
           </div>
           <h1 className="display-xl mt-5">{job.title}</h1>
           <div className="mt-5 flex flex-wrap gap-4 text-sm text-cream/75">
@@ -91,12 +93,12 @@ export default function JobDetailPage() {
             </span>
             <span>{job.department}</span>
             <span>{job.salaryLabel}</span>
-            <span>Posted {formatDate(job.postedAt)}</span>
+            <span>{t('Posted {date}', { date: formatDate(job.postedAt) })}</span>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button to="/candidates#interest">Apply / register interest</Button>
+            <Button to="/candidates#interest">{t('Apply / register interest')}</Button>
             <Button to="/jobs" variant="lightOutline">
-              More jobs
+              {t('More jobs')}
             </Button>
           </div>
         </Container>
@@ -107,11 +109,11 @@ export default function JobDetailPage() {
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="space-y-10">
               <div>
-                <h2 className="display-md">About the role</h2>
+                <h2 className="display-md">{t('About the role')}</h2>
                 <p className="mt-4 leading-relaxed text-muted">{job.description}</p>
               </div>
               <div>
-                <h2 className="display-md">Responsibilities</h2>
+                <h2 className="display-md">{t('Responsibilities')}</h2>
                 <ul className="mt-4 space-y-2 text-muted">
                   {(job.responsibilities || []).map((item) => (
                     <li key={item} className="flex gap-3">
@@ -122,7 +124,7 @@ export default function JobDetailPage() {
                 </ul>
               </div>
               <div>
-                <h2 className="display-md">Requirements</h2>
+                <h2 className="display-md">{t('Requirements')}</h2>
                 <ul className="mt-4 space-y-2 text-muted">
                   {(job.requirements || []).map((item) => (
                     <li key={item} className="flex gap-3">
@@ -136,19 +138,19 @@ export default function JobDetailPage() {
 
             <aside className="h-fit rounded-2xl border border-line bg-white p-6 shadow-soft">
               <h2 className="font-display text-xl font-bold tracking-tight">
-                Application instructions
+                {t('Application instructions')}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                Create a candidate account to apply, or register your interest and the team will follow up.
+                {t('Create a candidate account to apply, or register your interest and the team will follow up.')}
               </p>
               <div className="mt-6">
                 <Button to="/candidates#interest" className="w-full">
-                  Register interest
+                  {t('Register interest')}
                 </Button>
               </div>
               <div className="mt-3">
                 <Button to="/contact" variant="ghost" className="w-full">
-                  Ask a question
+                  {t('Ask a question')}
                 </Button>
               </div>
             </aside>
@@ -156,7 +158,7 @@ export default function JobDetailPage() {
 
           {related.length ? (
             <div className="mt-16">
-              <h2 className="display-md">Related roles</h2>
+              <h2 className="display-md">{t('Related roles')}</h2>
               <div className="mt-8 grid gap-5 md:grid-cols-3">
                 {related.map((item) => (
                   <JobCard key={item.id} job={item} />

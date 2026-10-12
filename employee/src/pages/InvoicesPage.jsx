@@ -5,9 +5,11 @@ import DataTable from '../components/ui/DataTable'
 import PageHeader from '../components/ui/PageHeader'
 import Pagination from '../components/ui/Pagination'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { formatDate, formatMoney } from '../utils/format'
 
 export default function InvoicesPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
@@ -21,22 +23,22 @@ export default function InvoicesPage() {
 
   return (
     <div>
-      <PageHeader title="Invoices" description="Invoices issued to your company." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Invoices' }]} />
+      <PageHeader title={t('Invoices')} description={t('Invoices issued to your company.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Invoices') }]} />
       <div className="mb-4 max-w-xs">
-        <select className="input-field" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }}>
-          <option value="">All statuses</option>
-          {['Draft', 'Issued', 'Partially Paid', 'Paid', 'Overdue'].map((s) => <option key={s}>{s}</option>)}
+        <select className="input-field" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }} aria-label={t('Status')}>
+          <option value="">{t('All statuses')}</option>
+          {['Draft', 'Issued', 'Partially Paid', 'Paid', 'Overdue'].map((s) => <option key={s} value={s}>{t(s)}</option>)}
         </select>
       </div>
       <DataTable
         rows={slice}
         columns={[
-          { key: 'number', label: 'Invoice', render: (i) => <Link className="font-medium hover:text-accent" to={`/invoices/${i.id}`}>{i.number}</Link> },
-          { key: 'engagementLabel', label: 'Engagement' },
-          { key: 'issueDate', label: 'Issued', render: (i) => formatDate(i.issueDate) },
-          { key: 'dueDate', label: 'Due', render: (i) => formatDate(i.dueDate) },
-          { key: 'total', label: 'Total', render: (i) => formatMoney(i.total) },
-          { key: 'status', label: 'Status', render: (i) => <Badge tone={statusTone(i.status)}>{i.status}</Badge> },
+          { key: 'number', label: t('Invoice'), render: (i) => <Link className="font-medium hover:text-accent" to={`/invoices/${i.id}`}>{i.number}</Link> },
+          { key: 'engagementLabel', label: t('Engagement') },
+          { key: 'issueDate', label: t('Issued'), render: (i) => formatDate(i.issueDate) },
+          { key: 'dueDate', label: t('Due'), render: (i) => formatDate(i.dueDate) },
+          { key: 'total', label: t('Total'), render: (i) => formatMoney(i.total) },
+          { key: 'status', label: t('Status'), render: (i) => <Badge tone={statusTone(i.status)}>{t(i.status)}</Badge> },
         ]}
       />
       <Pagination page={page} pageSize={5} total={rows.length} onChange={setPage} />

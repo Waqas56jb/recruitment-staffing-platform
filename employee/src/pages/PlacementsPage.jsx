@@ -5,9 +5,11 @@ import DataTable from '../components/ui/DataTable'
 import PageHeader from '../components/ui/PageHeader'
 import Pagination from '../components/ui/Pagination'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { formatDate, formatMoney } from '../utils/format'
 
 export default function PlacementsPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const [q, setQ] = useState('')
   const [status, setStatus] = useState('')
@@ -26,23 +28,23 @@ export default function PlacementsPage() {
 
   return (
     <div>
-      <PageHeader title="Placements" description="Confirmed assignments for your organisation (demo data)." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Placements' }]} />
+      <PageHeader title={t('Placements')} description={t('Confirmed assignments for your organisation (demo data).')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Placements') }]} />
       <div className="mb-4 grid gap-3 md:grid-cols-3">
-        <input className="input-field" placeholder="Search role, location, candidate" value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
-        <select className="input-field" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }}>
-          <option value="">All statuses</option>
-          {['Confirmed', 'Active', 'Completed', 'Cancelled'].map((s) => <option key={s}>{s}</option>)}
+        <input className="input-field" placeholder={t('Search role, location, candidate')} aria-label={t('Search role, location, candidate')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
+        <select className="input-field" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }} aria-label={t('Status')}>
+          <option value="">{t('All statuses')}</option>
+          {['Confirmed', 'Active', 'Completed', 'Cancelled'].map((s) => <option key={s} value={s}>{t(s)}</option>)}
         </select>
       </div>
       <DataTable
         rows={slice}
         columns={[
-          { key: 'role', label: 'Placement', render: (p) => <Link className="font-medium hover:text-accent" to={`/placements/${p.id}`}>{p.role}</Link> },
-          { key: 'candidate', label: 'Candidate', render: (p) => state.candidates.find((c) => c.id === p.candidateId)?.fullName || '—' },
-          { key: 'location', label: 'Location' },
-          { key: 'startDate', label: 'Start', render: (p) => formatDate(p.startDate) },
-          { key: 'rate', label: 'Rate', render: (p) => `${formatMoney(p.rate)} / ${p.rateUnit}` },
-          { key: 'status', label: 'Status', render: (p) => <Badge tone={statusTone(p.status)}>{p.status}</Badge> },
+          { key: 'role', label: t('Placement'), render: (p) => <Link className="font-medium hover:text-accent" to={`/placements/${p.id}`}>{p.role}</Link> },
+          { key: 'candidate', label: t('Candidate'), render: (p) => state.candidates.find((c) => c.id === p.candidateId)?.fullName || '—' },
+          { key: 'location', label: t('Location') },
+          { key: 'startDate', label: t('Start'), render: (p) => formatDate(p.startDate) },
+          { key: 'rate', label: t('Rate'), render: (p) => `${formatMoney(p.rate)} / ${t(p.rateUnit)}` },
+          { key: 'status', label: t('Status'), render: (p) => <Badge tone={statusTone(p.status)}>{t(p.status)}</Badge> },
         ]}
       />
       <Pagination page={page} pageSize={5} total={rows.length} onChange={setPage} />

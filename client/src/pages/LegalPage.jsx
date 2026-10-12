@@ -3,6 +3,7 @@ import Container from '../components/ui/Container'
 import { siteConfig } from '../config/site'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { currentYear } from '../utils/format'
+import { useI18n } from '../i18n'
 
 const content = {
   privacy: {
@@ -12,7 +13,7 @@ const content = {
     sections: [
       {
         heading: 'Who we are',
-        body: `${siteConfig.brand.name} is a recruitment and staffing brand represented by this demonstration website. Update the legal entity name, registration details, and contact identity before publication.`,
+        body: '{brand} is a recruitment and staffing brand represented by this demonstration website. Update the legal entity name, registration details, and contact identity before publication.',
       },
       {
         heading: 'Information we may collect',
@@ -28,7 +29,7 @@ const content = {
       },
       {
         heading: 'Contact',
-        body: `For privacy questions, contact ${siteConfig.contact.email || 'the configured privacy contact'} once genuine details are supplied.`,
+        body: 'For privacy questions, contact {email} once genuine details are supplied.',
       },
     ],
   },
@@ -62,7 +63,7 @@ const content = {
     sections: [
       {
         heading: 'About these terms',
-        body: `By using the ${siteConfig.brand.name} website, you agree to these draft terms for demonstration purposes. Replace them with binding terms approved for your operating entity.`,
+        body: 'By using the {brand} website, you agree to these draft terms for demonstration purposes. Replace them with binding terms approved for your operating entity.',
       },
       {
         heading: 'Website purpose',
@@ -85,37 +86,42 @@ const content = {
 }
 
 export default function LegalPage({ type }) {
+  const { t } = useI18n()
   const page = content[type]
+  const vars = {
+    brand: siteConfig.brand.name,
+    email: siteConfig.contact.email || t('the configured privacy contact'),
+  }
 
   usePageMeta({
-    title: page.title,
-    description: page.summary,
+    title: t(page.title),
+    description: t(page.summary),
   })
 
   return (
     <section className="bg-cream pt-32">
       <Container className="section-pad max-w-3xl">
         <p className="inline-flex rounded-sm bg-gold px-2.5 py-1 font-display text-xs font-semibold tracking-normal text-ink">
-          Draft — legal review required
+          {t('Draft — legal review required')}
         </p>
-        <h1 className="display-xl mt-5">{page.title}</h1>
-        <p className="mt-5 text-lg leading-relaxed text-muted">{page.summary}</p>
+        <h1 className="display-xl mt-5">{t(page.title)}</h1>
+        <p className="mt-5 text-lg leading-relaxed text-muted">{t(page.summary)}</p>
 
         <div className="mt-12 space-y-10">
           {page.sections.map((section) => (
             <section key={section.heading}>
               <h2 className="font-display text-2xl font-bold tracking-tight">
-                {section.heading}
+                {t(section.heading)}
               </h2>
-              <p className="mt-3 leading-relaxed text-muted">{section.body}</p>
+              <p className="mt-3 leading-relaxed text-muted">{t(section.body, vars)}</p>
             </section>
           ))}
         </div>
 
         <p className="mt-12 text-sm text-muted">
-          Last updated: {currentYear()} ·{' '}
+          {t('Last updated: {year}', { year: currentYear() })} ·{' '}
           <Link to="/contact" className="text-ink underline-offset-4 hover:underline">
-            Contact
+            {t('Contact')}
           </Link>
         </p>
       </Container>

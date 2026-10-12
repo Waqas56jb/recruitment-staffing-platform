@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
 import { siteConfig } from '../config/site'
+import { translate, useI18n } from '../i18n'
 
 export function usePageMeta({ title, description } = {}) {
+  const { lang } = useI18n()
   useEffect(() => {
     const nextTitle = title
-      ? siteConfig.seo.titleTemplate.replace('%s', title)
-      : siteConfig.seo.defaultTitle
+      ? siteConfig.seo.titleTemplate.replace('%s', translate(title, undefined, lang))
+      : translate(siteConfig.seo.defaultTitle, undefined, lang)
     document.title = nextTitle
 
-    const desc = description || siteConfig.seo.defaultDescription
+    const desc = translate(description || siteConfig.seo.defaultDescription, undefined, lang)
     let meta = document.querySelector('meta[name="description"]')
     if (!meta) {
       meta = document.createElement('meta')
@@ -21,5 +23,5 @@ export function usePageMeta({ title, description } = {}) {
     if (ogTitle) ogTitle.setAttribute('content', nextTitle)
     const ogDesc = document.querySelector('meta[property="og:description"]')
     if (ogDesc) ogDesc.setAttribute('content', desc)
-  }, [title, description])
+  }, [title, description, lang])
 }

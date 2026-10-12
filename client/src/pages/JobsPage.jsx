@@ -7,6 +7,7 @@ import Container from '../components/ui/Container'
 import { images } from '../data/images'
 import { employmentTypes, jobCategories } from '../data/jobs'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 const sortOptions = [
   { value: 'newest', label: 'Newest first' },
@@ -16,9 +17,10 @@ const sortOptions = [
 ]
 
 export default function JobsPage() {
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Jobs',
-    description: 'Browse published Staffora vacancies. Filter by location, category, and employment type.',
+    title: t('Jobs'),
+    description: t('Browse published Staffora vacancies. Filter by location, category, and employment type.'),
   })
 
   const [jobs, setJobs] = useState([])
@@ -75,9 +77,9 @@ export default function JobsPage() {
     <>
       <PageHero
         compact
-        eyebrow="Careers"
-        title="Find your next opportunity"
-        description="Published roles from Staffora. Use the filters to narrow the list."
+        eyebrow={t('Careers')}
+        title={t('Find your next opportunity')}
+        description={t('Published roles from Staffora. Use the filters to narrow the list.')}
         image={images.office}
       />
 
@@ -88,18 +90,18 @@ export default function JobsPage() {
             onSubmit={(event) => event.preventDefault()}
           >
             <label className="block text-sm xl:col-span-2">
-              <span className="mb-2 block font-medium">Search</span>
+              <span className="mb-2 block font-medium">{t('Search')}</span>
               <input
                 className="input-field"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Role, keyword, department"
+                placeholder={t('Role, keyword, department')}
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-2 block font-medium">Location</span>
+              <span className="mb-2 block font-medium">{t('Location')}</span>
               <select className="input-field" value={location} onChange={(event) => setLocation(event.target.value)}>
-                <option value="">All locations</option>
+                <option value="">{t('All locations')}</option>
                 {locations.map((item) => (
                   <option key={item} value={item}>
                     {item}
@@ -108,37 +110,37 @@ export default function JobsPage() {
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-2 block font-medium">Category</span>
+              <span className="mb-2 block font-medium">{t('Category')}</span>
               <select className="input-field" value={category} onChange={(event) => setCategory(event.target.value)}>
-                <option value="">All categories</option>
+                <option value="">{t('All categories')}</option>
                 {jobCategories.map((item) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t(item)}
                   </option>
                 ))}
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-2 block font-medium">Employment type</span>
+              <span className="mb-2 block font-medium">{t('Employment type')}</span>
               <select
                 className="input-field"
                 value={employmentType}
                 onChange={(event) => setEmploymentType(event.target.value)}
               >
-                <option value="">All types</option>
+                <option value="">{t('All types')}</option>
                 {employmentTypes.map((item) => (
                   <option key={item} value={item}>
-                    {item}
+                    {t(item)}
                   </option>
                 ))}
               </select>
             </label>
             <label className="block text-sm md:col-span-2 xl:col-span-2">
-              <span className="mb-2 block font-medium">Sort</span>
+              <span className="mb-2 block font-medium">{t('Sort')}</span>
               <select className="input-field" value={sort} onChange={(event) => setSort(event.target.value)}>
                 {sortOptions.map((item) => (
                   <option key={item.value} value={item.value}>
-                    {item.label}
+                    {t(item.label)}
                   </option>
                 ))}
               </select>
@@ -147,8 +149,8 @@ export default function JobsPage() {
 
           <div className="mt-8 flex items-center justify-between gap-4">
             <p className="text-sm text-muted">
-              Showing <strong className="text-ink">{filtered.length}</strong> listing
-              {filtered.length === 1 ? '' : 's'}
+              {t('Showing')} <strong className="text-ink">{filtered.length}</strong>{' '}
+              {filtered.length === 1 ? t('listing') : t('listings')}
             </p>
             {(query || location || category || employmentType) && (
               <button
@@ -162,7 +164,7 @@ export default function JobsPage() {
                   setSort('newest')
                 }}
               >
-                Clear filters
+                {t('Clear filters')}
               </button>
             )}
           </div>
@@ -176,9 +178,9 @@ export default function JobsPage() {
           ) : (
             <div className="mt-8">
               <EmptyState
-                title="No matching listings"
-                description="Try a broader search, or check back when new roles are published."
-                actionLabel="View all jobs"
+                title={t('No matching listings')}
+                description={t('Try a broader search, or check back when new roles are published.')}
+                actionLabel={t('View all jobs')}
                 actionTo="/jobs"
               />
             </div>

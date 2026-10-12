@@ -1,6 +1,8 @@
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 export default function Badge({ children, tone = 'ink', className }) {
+  const { t } = useI18n()
   const tones = {
     ink: 'bg-ink text-white',
     accent: 'bg-accent/10 text-accent',
@@ -17,7 +19,7 @@ export default function Badge({ children, tone = 'ink', className }) {
         className,
       )}
     >
-      {children}
+      {typeof children === 'string' ? t(children) : children}
     </span>
   )
 }

@@ -9,8 +9,11 @@ import { cn } from '../../utils/cn'
 import MobileNav from '../navigation/MobileNav'
 import Button from '../ui/Button'
 import Container from '../ui/Container'
+import LanguageSwitcher from '../ui/LanguageSwitcher'
+import { useI18n } from '../../i18n'
 
 export default function Header() {
+  const { t } = useI18n()
   const scrolled = useScrollHeader()
   const [open, setOpen] = useState(false)
   const location = useLocation()
@@ -39,7 +42,7 @@ export default function Header() {
       )}
     >
       <Container className="flex h-16 items-center justify-between gap-3 sm:h-[68px]">
-        <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label={`${siteConfig.brand.name} home`}>
+        <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label={t('{name} home', { name: siteConfig.brand.name })}>
           <span
             className={cn(
               'flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-bold',
@@ -53,7 +56,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t('Primary')}>
           {mainNav.map((item) => (
             <NavLink
               key={item.to}
@@ -72,12 +75,13 @@ export default function Header() {
               }
               end={item.to === '/'}
             >
-              {item.label}
+              {t(item.label)}
             </NavLink>
           ))}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <LanguageSwitcher variant={solid ? 'light' : 'dark'} />
           {session ? (
             <a
               href={panelUrl(session)}
@@ -86,7 +90,7 @@ export default function Header() {
                 solid ? 'text-ink hover:bg-cream' : 'text-white hover:bg-white/10',
               )}
             >
-              My panel
+              {t('My panel')}
             </a>
           ) : (
             <Link
@@ -96,12 +100,12 @@ export default function Header() {
                 solid ? 'text-ink hover:bg-cream' : 'text-white hover:bg-white/10',
               )}
             >
-              Sign in
+              {t('Sign in')}
             </Link>
           )}
           {session ? null : (
             <Button to="/register" variant={solid ? 'secondary' : 'lightOutline'} size="sm">
-              Register
+              {t('Register')}
             </Button>
           )}
           <Button
@@ -109,10 +113,10 @@ export default function Header() {
             variant={solid ? 'outline' : 'lightOutline'}
             size="sm"
           >
-            Find a Job
+            {t('Find a Job')}
           </Button>
           <Button to={siteConfig.cta.requestStaff} size="sm">
-            Request Staff
+            {t('Request Staff')}
           </Button>
         </div>
 
@@ -126,7 +130,7 @@ export default function Header() {
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
         >
-          <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
+          <span className="sr-only">{open ? t('Close menu') : t('Open menu')}</span>
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </Container>

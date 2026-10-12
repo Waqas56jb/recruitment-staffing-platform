@@ -11,6 +11,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useI18n } from '../../i18n'
 
 const icons = {
   UserCheck,
@@ -26,6 +27,7 @@ const icons = {
 }
 
 export default function ServiceCard({ service, index = 0, compact = false }) {
+  const { t } = useI18n()
   const Icon = icons[service.icon] || UserCheck
   const numbered = String(index + 1).padStart(2, '0')
 
@@ -41,12 +43,12 @@ export default function ServiceCard({ service, index = 0, compact = false }) {
         </span>
       </div>
 
-      <h3 className="text-lg font-semibold leading-snug sm:text-xl">{service.title}</h3>
+      <h3 className="text-lg font-semibold leading-snug sm:text-xl">{t(service.title)}</h3>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
-        {compact ? service.short : service.description}
+        {t(compact ? service.short : service.description)}
       </p>
       <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-accent transition group-hover:gap-1.5">
-        Learn more
+        {t('Learn more')}
         <span aria-hidden>→</span>
       </span>
     </Link>

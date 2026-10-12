@@ -9,16 +9,18 @@ import {
 } from '../../data/nav'
 import { currentYear } from '../../utils/format'
 import Container from '../ui/Container'
+import { useI18n } from '../../i18n'
 
 function FooterColumn({ title, links }) {
+  const { t } = useI18n()
   return (
     <div>
-      <h3 className="text-sm font-semibold text-white">{title}</h3>
+      <h3 className="text-sm font-semibold text-white">{t(title)}</h3>
       <ul className="mt-3 space-y-2">
         {links.map((link) => (
           <li key={link.to + link.label}>
             <Link to={link.to} className="text-sm text-white/65 transition hover:text-white">
-              {link.label}
+              {t(link.label)}
             </Link>
           </li>
         ))}
@@ -28,6 +30,7 @@ function FooterColumn({ title, links }) {
 }
 
 export default function Footer() {
+  const { t } = useI18n()
   const socialEntries = Object.entries(siteConfig.social).filter(([, value]) => value)
 
   return (
@@ -44,7 +47,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
-              {siteConfig.brand.shortDescription}
+              {t(siteConfig.brand.shortDescription)}
             </p>
             <div className="mt-5 space-y-1.5 text-sm text-white/65">
               {siteConfig.contact.email ? (
@@ -57,14 +60,14 @@ export default function Footer() {
               {siteConfig.contact.phoneDisplay ? (
                 <p>{siteConfig.contact.phoneDisplay}</p>
               ) : (
-                <p className="text-white/40">Phone number to be configured</p>
+                <p className="text-white/40">{t('Phone number to be configured')}</p>
               )}
               {siteConfig.contact.address ? (
                 <p>{siteConfig.contact.address}</p>
               ) : (
-                <p className="text-white/40">Address to be configured</p>
+                <p className="text-white/40">{t('Address to be configured')}</p>
               )}
-              {siteConfig.contact.hours ? <p>{siteConfig.contact.hours}</p> : null}
+              {siteConfig.contact.hours ? <p>{t(siteConfig.contact.hours)}</p> : null}
             </div>
             {socialEntries.length ? (
               <div className="mt-5 flex flex-wrap gap-2">
@@ -93,12 +96,12 @@ export default function Footer() {
 
         <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-5 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {currentYear()} {siteConfig.brand.legalName}. All rights reserved.
+            {t('© {year} {name}. All rights reserved.', { year: currentYear(), name: siteConfig.brand.legalName })}
           </p>
           <div className="flex flex-wrap gap-4">
             {legalLinks.map((link) => (
               <Link key={link.to} to={link.to} className="hover:text-white">
-                {link.label}
+                {t(link.label)}
               </Link>
             ))}
           </div>

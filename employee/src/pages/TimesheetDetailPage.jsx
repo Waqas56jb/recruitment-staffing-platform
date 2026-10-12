@@ -9,70 +9,72 @@ import Field from '../components/ui/Field'
 import PageHeader from '../components/ui/PageHeader'
 import { useToast } from '../components/ui/Toast'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { formatDate, formatDateTime } from '../utils/format'
 import { required } from '../utils/validation'
 
 export default function TimesheetDetailPage() {
   const { id } = useParams()
+  const { t } = useI18n()
   const { state, updateTimesheet } = useData()
   const { push } = useToast()
-  const timesheet = state.timesheets.find((t) => t.id === id && t.companyId === state.companyId)
+  const timesheet = state.timesheets.find((ts) => ts.id === id && ts.companyId === state.companyId)
   const [confirmApprove, setConfirmApprove] = useState(false)
   const [confirmReject, setConfirmReject] = useState(false)
   const [reason, setReason] = useState('')
   const [reasonError, setReasonError] = useState('')
 
-  if (!timesheet) return <EmptyState title="Timesheet not found" actionLabel="Back" actionTo="/timesheets" />
+  if (!timesheet) return <EmptyState title={t('Timesheet not found')} actionLabel={t('Back')} actionTo="/timesheets" />
   const worker = state.workers.find((w) => w.id === timesheet.workerId)
   const canReview = timesheet.status === 'Submitted'
 
   return (
     <div>
       <PageHeader
-        title={`Week ending ${formatDate(timesheet.weekEnding)}`}
-        description={worker?.displayName || 'Worker'}
-        breadcrumbs={[{ label: 'Timesheets', to: '/timesheets' }, { label: formatDate(timesheet.weekEnding) }]}
+        title={t('Week ending {date}', { date: formatDate(timesheet.weekEnding) })}
+        description={worker?.displayName || t('Worker')}
+        breadcrumbs={[{ label: t('Timesheets'), to: '/timesheets' }, { label: formatDate(timesheet.weekEnding) }]}
         actions={canReview ? (
           <>
-            <Button variant="outline" onClick={() => setConfirmApprove(true)}>Approve</Button>
-            <Button variant="danger" onClick={() => { setReason(''); setReasonError(''); setConfirmReject(true) }}>Reject</Button>
+            <Button variant="outline" onClick={() => setConfirmApprove(true)}>{t('Approve')}</Button>
+            <Button variant="danger" onClick={() => { setReason(''); setReasonError(''); setConfirmReject(true) }}>{t('Reject')}</Button>
           </>
         ) : null}
       />
-      <div className="mb-4"><Badge tone={statusTone(timesheet.status)}>{timesheet.status}</Badge></div>
+      <div className="mb-4"><Badge tone={statusTone(timesheet.status)}>{t(timesheet.status)}</Badge></div>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2 space-y-3 text-sm">
-          <p><strong>Regular hours:</strong> {timesheet.regularHours}</p>
-          <p><strong>Overtime:</strong> {timesheet.overtimeHours}</p>
-          <p><strong>Breaks:</strong> {timesheet.breakHours}</p>
-          <p><strong>Total:</strong> {timesheet.totalHours}</p>
-          <p><strong>Submitted:</strong> {formatDateTime(timesheet.submittedAt)}</p>
-          {timesheet.reviewedAt ? <p><strong>Reviewed:</strong> {formatDateTime(timesheet.reviewedAt)}</p> : null}
-          {timesheet.rejectionReason ? <p className="text-accent"><strong>Rejection reason:</strong> {timesheet.rejectionReason}</p> : null}
+          <p><strong>{t('Regular hours:')}</strong> {timesheet.regularHours}</p>
+          <p><strong>{t('Overtime:')}</strong> {timesheet.overtimeHours}</p>
+          <p><strong>{t('Breaks:')}</strong> {timesheet.breakHours}</p>
+          <p><strong>{t('Total:')}</strong> {timesheet.totalHours}</p>
+          <p><strong>{t('Submitted:')}</strong> {formatDateTime(timesheet.submittedAt)}</p>
+          {timesheet.reviewedAt ? <p><strong>{t('Reviewed:')}</strong> {formatDateTime(timesheet.reviewedAt)}</p> : null}
+          {timesheet.rejectionReason ? <p className="text-accent"><strong>{t('Rejection reason:')}</strong> {timesheet.rejectionReason}</p> : null}
         </Card>
         <Card className="text-sm text-muted">
-          Approvals and rejections are saved on the timesheet.
+          {t('Approvals and rejections are saved on the timesheet.')}
         </Card>
       </div>
 
       <ConfirmDialog
         open={confirmApprove}
-        title="Approve timesheet?"
-        message="This marks the timesheet approved."
-        confirmLabel="Approve"
+        title={t('Approve timesheet?')}
+        message={t('This marks the timesheet approved.')}
+        confirmLabel={t('Approve')}
         onClose={() => setConfirmApprove(false)}
         onConfirm={() => {
           updateTimesheet(timesheet.id, { status: 'Approved', reviewedAt: new Date().toISOString(), rejectionReason: '' })
-          push({ title: 'Timesheet approved', message: 'The status is saved.' })
+          push({ title: t('Timesheet approved'), message: t('The status is saved.') })
           setConfirmApprove(false)
         }}
       />
 
       <ConfirmDialog
         open={confirmReject}
-        title="Reject timesheet?"
-        message="Provide a reason. The timesheet will be marked rejected."
-        confirmLabel="Reject"
+        title={t('Reject timesheet?')}
+        message={t('Provide a reason. The timesheet will be marked rejected.')}
+        confirmLabel={t('Reject')}
         tone="danger"
         onClose={() => setConfirmReject(false)}
         onConfirm={() => {
@@ -80,11 +82,11 @@ export default function TimesheetDetailPage() {
           setReasonError(err || '')
           if (err) return
           updateTimesheet(timesheet.id, { status: 'Rejected', reviewedAt: new Date().toISOString(), rejectionReason: reason.trim() })
-          push({ title: 'Timesheet rejected', message: 'The reason is saved on the timesheet.' })
+          push({ title: t('Timesheet rejected'), message: t('The reason is saved on the timesheet.') })
           setConfirmReject(false)
         }}
       >
-        <Field id="reason" label="Rejection reason" required error={reasonError} className="mt-4">
+        <Field id="reason" label={t('Rejection reason')} required error={t(reasonError)} className="mt-4">
           <textarea id="reason" className="input-field" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
         </Field>
       </ConfirmDialog>

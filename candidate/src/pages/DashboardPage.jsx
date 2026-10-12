@@ -7,8 +7,10 @@ import PageHeader from '../components/ui/PageHeader'
 import StatCard from '../components/ui/StatCard'
 import { useData } from '../context/DataContext'
 import { formatDate, formatDateTime } from '../utils/format'
+import { useI18n } from '../i18n'
 
 export default function DashboardPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const cid = state.candidateProfileId
   const apps = state.applications.filter((a) => a.candidateId === cid)
@@ -20,22 +22,22 @@ export default function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title="Dashboard"
-        description="Your applications, interviews, and saved roles."
-        breadcrumbs={[{ label: 'Home' }]}
-        actions={<Button to="/jobs">Browse jobs</Button>}
+        title={t('Dashboard')}
+        description={t('Your applications, interviews, and saved roles.')}
+        breadcrumbs={[{ label: t('Home') }]}
+        actions={<Button to="/jobs">{t('Browse jobs')}</Button>}
       />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Applications" value={apps.length} icon={Send} />
-        <StatCard label="Saved jobs" value={saved} icon={Bookmark} />
-        <StatCard label="Interviews" value={interviews.length} icon={CalendarDays} />
-        <StatCard label="Open listings" value={openJobs} icon={Briefcase} />
+        <StatCard label={t('Applications')} value={apps.length} icon={Send} />
+        <StatCard label={t('Saved jobs')} value={saved} icon={Bookmark} />
+        <StatCard label={t('Interviews')} value={interviews.length} icon={CalendarDays} />
+        <StatCard label={t('Open listings')} value={openJobs} icon={Briefcase} />
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Recent applications</h2>
-            <Link to="/applications" className="text-xs font-semibold text-accent">View all</Link>
+            <h2 className="font-display text-lg font-semibold">{t('Recent applications')}</h2>
+            <Link to="/applications" className="text-xs font-semibold text-accent">{t('View all')}</Link>
           </div>
           <div className="space-y-3">
             {apps.map((a) => {
@@ -44,7 +46,7 @@ export default function DashboardPage() {
                 <Link key={a.id} to={`/applications/${a.id}`} className="flex items-center justify-between rounded-md border border-line px-3 py-2 hover:bg-paper">
                   <div>
                     <p className="font-medium">{job?.title || a.jobId}</p>
-                    <p className="text-xs text-muted">Updated {formatDate(a.updatedAt)}</p>
+                    <p className="text-xs text-muted">{t('Updated {date}', { date: formatDate(a.updatedAt) })}</p>
                   </div>
                   <Badge tone={statusTone(a.status)}>{a.status}</Badge>
                 </Link>
@@ -54,20 +56,20 @@ export default function DashboardPage() {
         </Card>
         <Card>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Upcoming interviews</h2>
-            <Link to="/interviews" className="text-xs font-semibold text-accent">Schedule</Link>
+            <h2 className="font-display text-lg font-semibold">{t('Upcoming interviews')}</h2>
+            <Link to="/interviews" className="text-xs font-semibold text-accent">{t('Schedule')}</Link>
           </div>
           {interviews.length ? interviews.map((i) => {
             const job = state.jobs.find((j) => j.id === i.jobId)
             return (
               <div key={i.id} className="mb-3 rounded-md border border-line px-3 py-2">
                 <p className="font-medium">{job?.title}</p>
-                <p className="text-xs text-muted">{formatDateTime(i.datetime)} · {i.type}</p>
+                <p className="text-xs text-muted">{formatDateTime(i.datetime)} · {t(i.type)}</p>
               </div>
             )
-          }) : <p className="text-sm text-muted">No interviews scheduled.</p>}
+          }) : <p className="text-sm text-muted">{t('No interviews scheduled.')}</p>}
           {notes.length ? (
-            <p className="mt-4 text-sm text-muted">{notes.length} unread notification{notes.length === 1 ? '' : 's'} — <Link className="text-accent" to="/notifications">review</Link></p>
+            <p className="mt-4 text-sm text-muted">{notes.length === 1 ? t('{count} unread notification', { count: notes.length }) : t('{count} unread notifications', { count: notes.length })} — <Link className="text-accent" to="/notifications">{t('review')}</Link></p>
           ) : null}
         </Card>
       </div>

@@ -4,12 +4,14 @@ import Card from '../components/ui/Card'
 import PageHeader from '../components/ui/PageHeader'
 import StatCard from '../components/ui/StatCard'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { formatMoney } from '../utils/format'
 import { Briefcase, Clock3, Receipt, Users } from 'lucide-react'
 
 const COLORS = ['#c8102e', '#b45309', '#111827', '#0e7c47', '#a15c00']
 
 export default function ReportsPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const cid = state.companyId
 
@@ -18,13 +20,13 @@ export default function ReportsPage() {
     state.staffingRequests.filter((r) => r.companyId === cid).forEach((r) => {
       map[r.status] = (map[r.status] || 0) + 1
     })
-    return Object.entries(map).map(([name, value]) => ({ name, value }))
-  }, [state, cid])
+    return Object.entries(map).map(([name, value]) => ({ name: t(name), value }))
+  }, [state, cid, t])
 
   const hoursTrend = useMemo(() => {
     return state.timesheets
-      .filter((t) => t.companyId === cid)
-      .map((t) => ({ week: t.weekEnding.slice(5), hours: t.totalHours, status: t.status }))
+      .filter((ts) => ts.companyId === cid)
+      .map((ts) => ({ week: ts.weekEnding.slice(5), hours: ts.totalHours, status: ts.status }))
   }, [state, cid])
 
   const invoiceSpend = useMemo(() => {
@@ -35,21 +37,21 @@ export default function ReportsPage() {
 
   const placements = state.placements.filter((p) => p.companyId === cid).length
   const workers = state.workers.filter((w) => w.companyId === cid).length
-  const pendingTs = state.timesheets.filter((t) => t.companyId === cid && t.status === 'Submitted').length
+  const pendingTs = state.timesheets.filter((ts) => ts.companyId === cid && ts.status === 'Submitted').length
   const openInv = state.invoices.filter((i) => i.companyId === cid && i.status !== 'Paid').reduce((s, i) => s + (i.total || 0), 0)
 
   return (
     <div>
-      <PageHeader title="Reports" description="Figures calculated from your company records." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Reports' }]} />
+      <PageHeader title={t('Reports')} description={t('Figures calculated from your company records.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Reports') }]} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Placements" value={placements} icon={Briefcase} />
-        <StatCard label="Workers" value={workers} icon={Users} />
-        <StatCard label="Timesheets pending" value={pendingTs} icon={Clock3} />
-        <StatCard label="Open invoice value" value={formatMoney(openInv)} icon={Receipt} />
+        <StatCard label={t('Placements')} value={placements} icon={Briefcase} />
+        <StatCard label={t('Workers')} value={workers} icon={Users} />
+        <StatCard label={t('Timesheets pending')} value={pendingTs} icon={Clock3} />
+        <StatCard label={t('Open invoice value')} value={formatMoney(openInv)} icon={Receipt} />
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>
-          <h2 className="mb-4 font-display text-lg font-semibold">Requests by status</h2>
+          <h2 className="mb-4 font-display text-lg font-semibold">{t('Requests by status')}</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -62,7 +64,7 @@ export default function ReportsPage() {
           </div>
         </Card>
         <Card>
-          <h2 className="mb-4 font-display text-lg font-semibold">Timesheet hours</h2>
+          <h2 className="mb-4 font-display text-lg font-semibold">{t('Timesheet hours')}</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={hoursTrend}>
@@ -70,13 +72,13 @@ export default function ReportsPage() {
                 <XAxis dataKey="week" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="hours" fill="#c8102e" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="hours" name={t('Hours')} fill="#c8102e" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
         <Card className="lg:col-span-2">
-          <h2 className="mb-4 font-display text-lg font-semibold">Invoice totals</h2>
+          <h2 className="mb-4 font-display text-lg font-semibold">{t('Invoice totals')}</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={invoiceSpend}>
@@ -84,7 +86,7 @@ export default function ReportsPage() {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip formatter={(v) => formatMoney(v)} />
-                <Bar dataKey="total" fill="#b45309" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" name={t('Total')} fill="#b45309" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

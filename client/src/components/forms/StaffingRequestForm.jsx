@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { api } from '@staffora/api'
+import { useI18n } from '../../i18n'
 import { industries } from '../../data/industries'
 import {
   collectErrors,
@@ -38,6 +39,7 @@ const defaults = {
 
 export default function StaffingRequestForm() {
   const { push } = useToast()
+  const { t } = useI18n()
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const {
@@ -71,8 +73,8 @@ export default function StaffingRequestForm() {
       keys.forEach((key) => setError(key, { type: 'manual', message: nextErrors[key] }))
       push({
         tone: 'error',
-        title: 'Check the form',
-        message: 'Please correct the highlighted fields.',
+        title: t('Check the form'),
+        message: t('Please correct the highlighted fields.'),
       })
       return
     }
@@ -82,9 +84,9 @@ export default function StaffingRequestForm() {
       await api('/api/public/staffing-requests', { method: 'POST', body: JSON.stringify(values) })
       setSubmitted(true)
       reset(defaults)
-      push({ title: 'Request submitted', message: 'Staffora has your staffing brief.' })
+      push({ title: t('Request submitted'), message: t('Staffora has your staffing brief.') })
     } catch (error) {
-      push({ tone: 'error', title: 'Could not submit', message: error.message })
+      push({ tone: 'error', title: t('Could not submit'), message: t(error.message) })
     } finally {
       setSubmitting(false)
     }
@@ -97,9 +99,9 @@ export default function StaffingRequestForm() {
       className="form-panel"
     >
       <div className="mb-6 border-b border-line pb-5 sm:mb-8 sm:pb-6">
-        <p className="eyebrow text-accent">Staffing request</p>
-        <h3 className="mt-2 display-md">Tell us what you need</h3>
-        <p className="mt-2 max-w-3xl text-sm text-muted sm:mt-3">Tell us the roles you need. We save the request for the agency team.</p>
+        <p className="eyebrow text-accent">{t('Staffing request')}</p>
+        <h3 className="mt-2 display-md">{t('Tell us what you need')}</h3>
+        <p className="mt-2 max-w-3xl text-sm text-muted sm:mt-3">{t('Tell us the roles you need. We save the request for the agency team.')}</p>
       </div>
 
       <div className="form-grid">
@@ -120,13 +122,13 @@ export default function StaffingRequestForm() {
         </FormField>
         <FormField id="industry" label="Industry" required error={errors.industry?.message}>
           <FormSelect id="industry" error={errors.industry} {...register('industry')}>
-            <option value="">Select industry</option>
+            <option value="">{t('Select industry')}</option>
             {industries.map((item) => (
               <option key={item.id} value={item.title}>
-                {item.title}
+                {t(item.title)}
               </option>
             ))}
-            <option value="Other">Other</option>
+            <option value="Other">{t('Other')}</option>
           </FormSelect>
         </FormField>
         <FormField id="jobRoles" label="Required job roles" required error={errors.jobRoles?.message} className="sm:col-span-2 xl:col-span-3">
@@ -137,11 +139,11 @@ export default function StaffingRequestForm() {
         </FormField>
         <FormField id="employmentType" label="Employment type" required error={errors.employmentType?.message}>
           <FormSelect id="employmentType" error={errors.employmentType} {...register('employmentType')}>
-            <option value="">Select type</option>
-            <option>Temporary</option>
-            <option>Permanent</option>
-            <option>Contract</option>
-            <option>Mixed / unsure</option>
+            <option value="">{t('Select type')}</option>
+            <option value="Temporary">{t('Temporary')}</option>
+            <option value="Permanent">{t('Permanent')}</option>
+            <option value="Contract">{t('Contract')}</option>
+            <option value="Mixed / unsure">{t('Mixed / unsure')}</option>
           </FormSelect>
         </FormField>
         <FormField id="location" label="Work location" required error={errors.location?.message}>
@@ -182,13 +184,13 @@ export default function StaffingRequestForm() {
         />
         <div className="flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:items-center">
           <Button type="submit" disabled={submitting} className="w-full xs:w-auto">
-            {submitting ? 'Submitting…' : 'Submit staffing request'}
+            {submitting ? t('Submitting…') : t('Submit staffing request')}
           </Button>
-          {submitting ? <LoadingSpinner label="Submitting" /> : null}
+          {submitting ? <LoadingSpinner label={t('Submitting')} /> : null}
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Request saved. The agency team can review it.
+            {t('Request saved. The agency team can review it.')}
           </p>
         ) : null}
       </div>

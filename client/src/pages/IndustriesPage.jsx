@@ -8,14 +8,17 @@ import OptimizedImage from '../components/ui/OptimizedImage'
 import { images } from '../data/images'
 import { industries } from '../data/industries'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 import { cn } from '../utils/cn'
 
 export default function IndustriesPage() {
   const location = useLocation()
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Industries',
-    description:
+    title: t('Industries'),
+    description: t(
       'Industry staffing solutions across logistics, manufacturing, hospitality, retail, office, IT, and healthcare support.',
+    ),
   })
 
   useEffect(() => {
@@ -27,11 +30,13 @@ export default function IndustriesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Industries"
-        title="Sector-aware staffing for real operations"
-        description="Configurable industry coverage with typical roles, operational context, and clear next steps for employers and candidates."
+        eyebrow={t('Industries')}
+        title={t('Sector-aware staffing for real operations')}
+        description={t(
+          'Configurable industry coverage with typical roles, operational context, and clear next steps for employers and candidates.',
+        )}
         image={images.logistics}
-        actions={<Button to="/employers#staffing-request">Discuss your sector</Button>}
+        actions={<Button to="/employers#staffing-request">{t('Discuss your sector')}</Button>}
       />
 
       <section className="section-pad bg-cream">
@@ -44,16 +49,16 @@ export default function IndustriesPage() {
             >
               <OptimizedImage
                 src={industry.image.src}
-                alt={industry.image.alt}
+                alt={t(industry.image.alt)}
                 className={cn('aspect-[5/4] rounded-2xl', index % 2 === 1 && 'lg:order-2')}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className={cn(index % 2 === 1 && 'lg:order-1')}>
-                <p className="eyebrow text-accent">Industry focus</p>
-                <h2 className="display-lg mt-3">{industry.title}</h2>
-                <p className="mt-5 leading-relaxed text-muted">{industry.summary}</p>
+                <p className="eyebrow text-accent">{t('Industry focus')}</p>
+                <h2 className="display-lg mt-3">{t(industry.title)}</h2>
+                <p className="mt-5 leading-relaxed text-muted">{t(industry.summary)}</p>
                 <h3 className="mt-8 font-display text-sm font-semibold tracking-normal">
-                  Typical roles
+                  {t('Typical roles')}
                 </h3>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {industry.roles.map((role) => (
@@ -61,14 +66,14 @@ export default function IndustriesPage() {
                       key={role}
                       className="rounded-md border border-line bg-white px-3 py-1.5 text-sm text-ink"
                     >
-                      {role}
+                      {t(role)}
                     </span>
                   ))}
                 </div>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Button to="/employers#staffing-request">Request staff</Button>
+                  <Button to="/employers#staffing-request">{t('Request staff')}</Button>
                   <Button to="/jobs" variant="outline">
-                    View sample jobs
+                    {t('View sample jobs')}
                   </Button>
                 </div>
               </div>
@@ -79,9 +84,11 @@ export default function IndustriesPage() {
 
       <CtaBand
         tone="cream"
-        title="Don’t see your industry listed?"
-        description="Industry data is configurable. Contact us with your sector requirements and role profiles."
-        actions={<Button to="/contact" variant="dark">Contact us</Button>}
+        title={t('Don’t see your industry listed?')}
+        description={t(
+          'Industry data is configurable. Contact us with your sector requirements and role profiles.',
+        )}
+        actions={<Button to="/contact" variant="dark">{t('Contact us')}</Button>}
         image={images.about}
       />
     </>

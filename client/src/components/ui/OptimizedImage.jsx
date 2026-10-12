@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 function buildSrcSet(src) {
   if (!src?.includes('images.unsplash.com')) return undefined
@@ -24,6 +25,7 @@ export default function OptimizedImage({
   sizes = '(max-width: 768px) 100vw, 50vw',
   objectPosition = 'center',
 }) {
+  const { t } = useI18n()
   const [failed, setFailed] = useState(false)
 
   if (failed || !src) {
@@ -34,9 +36,9 @@ export default function OptimizedImage({
           className,
         )}
         role="img"
-        aria-label={alt || 'Image unavailable'}
+        aria-label={alt ? t(alt) : t('Image unavailable')}
       >
-        Image unavailable
+        {t('Image unavailable')}
       </div>
     )
   }
@@ -45,7 +47,7 @@ export default function OptimizedImage({
     <div className={cn('overflow-hidden', className)}>
       <img
         src={src}
-        alt={alt}
+        alt={alt ? t(alt) : alt}
         width={width}
         height={height}
         sizes={sizes}

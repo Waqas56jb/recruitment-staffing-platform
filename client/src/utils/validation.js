@@ -1,21 +1,23 @@
+import { translate } from '../i18n'
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function required(value, message = 'This field is required') {
-  if (value === undefined || value === null) return message
-  if (typeof value === 'string' && !value.trim()) return message
-  if (typeof value === 'boolean' && value !== true) return message
+  if (value === undefined || value === null) return translate(message)
+  if (typeof value === 'string' && !value.trim()) return translate(message)
+  if (typeof value === 'boolean' && value !== true) return translate(message)
   return ''
 }
 
 export function email(value, message = 'Enter a valid email address') {
   if (!value) return ''
-  return EMAIL_RE.test(String(value).trim()) ? '' : message
+  return EMAIL_RE.test(String(value).trim()) ? '' : translate(message)
 }
 
 export function optionalPhone(value, message = 'Enter a valid phone number') {
   if (!value || !String(value).trim()) return ''
   const cleaned = String(value).replace(/[\s()-]/g, '')
-  return /^[+]?[\d]{7,15}$/.test(cleaned) ? '' : message
+  return /^[+]?[\d]{7,15}$/.test(cleaned) ? '' : translate(message)
 }
 
 export const CV_ACCEPT = ['.pdf', '.doc', '.docx']
@@ -32,10 +34,10 @@ export function validateCvFile(file) {
   const extOk = CV_ACCEPT.some((ext) => name.endsWith(ext))
   const mimeOk = !file.type || CV_MIME.includes(file.type)
   if (!extOk || !mimeOk) {
-    return 'Upload a PDF or Word document (.pdf, .doc, .docx)'
+    return translate('Upload a PDF or Word document (.pdf, .doc, .docx)')
   }
   if (file.size > CV_MAX_BYTES) {
-    return 'File must be 5MB or smaller'
+    return translate('File must be 5MB or smaller')
   }
   return ''
 }

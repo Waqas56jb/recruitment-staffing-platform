@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import OptimizedImage from '../ui/OptimizedImage'
 import Container from '../ui/Container'
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 export default function PageHero({
   eyebrow,
@@ -12,6 +13,8 @@ export default function PageHero({
   compact = false,
   align = 'left',
 }) {
+  const { t } = useI18n()
+  const tx = (value) => (typeof value === 'string' ? t(value) : value)
   return (
     <section
       className={cn(
@@ -23,7 +26,7 @@ export default function PageHero({
         <>
           <OptimizedImage
             src={image.src}
-            alt={image.alt}
+            alt={tx(image.alt)}
             priority
             className="absolute inset-0"
             imgClassName="opacity-55"
@@ -48,11 +51,11 @@ export default function PageHero({
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-4xl"
         >
-          {eyebrow ? <p className="eyebrow text-gold-soft">{eyebrow}</p> : null}
-          <h1 className="display-xl mt-3 sm:mt-4">{title}</h1>
+          {eyebrow ? <p className="eyebrow text-gold-soft">{tx(eyebrow)}</p> : null}
+          <h1 className="display-xl mt-3 sm:mt-4">{tx(title)}</h1>
           {description ? (
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:mt-5 sm:text-base lg:text-lg">
-              {description}
+              {tx(description)}
             </p>
           ) : null}
           {actions ? (

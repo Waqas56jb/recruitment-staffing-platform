@@ -21,6 +21,7 @@ import { industries } from '../data/industries'
 import { howItWorks, whyChooseUs } from '../data/process'
 import { services } from '../data/services'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -30,9 +31,10 @@ const fadeUp = {
 }
 
 export default function HomePage() {
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Home',
-    description: siteConfig.seo.defaultDescription,
+    title: t('Home'),
+    description: t(siteConfig.seo.defaultDescription),
   })
   const [jobs, setJobs] = useState([])
 
@@ -55,7 +57,7 @@ export default function HomePage() {
       <section className="relative min-h-[100svh] overflow-hidden bg-ink text-white">
         <OptimizedImage
           src={images.hero.src}
-          alt={images.hero.alt}
+          alt={t(images.hero.alt)}
           priority
           className="absolute inset-0"
           imgClassName="opacity-60 scale-105"
@@ -72,21 +74,21 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-4xl"
           >
-            <p className="eyebrow text-gold-soft">{siteConfig.brand.tagline}</p>
+            <p className="eyebrow text-gold-soft">{t(siteConfig.brand.tagline)}</p>
             <h1 className="display-hero mt-4 sm:mt-5">
-              Great People.
+              {t('Great People.')}
               <br />
-              Stronger Businesses.
+              {t('Stronger Businesses.')}
             </h1>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/80 sm:mt-6 sm:text-base">
-              {siteConfig.brand.shortDescription}
+              {t(siteConfig.brand.shortDescription)}
             </p>
             <div className="mt-8 flex flex-col gap-3 xs:flex-row xs:flex-wrap sm:mt-9">
               <Button to={siteConfig.cta.requestStaff} size="lg" className="w-full xs:w-auto">
-                Request Staff
+                {t('Request Staff')}
               </Button>
               <Button to={siteConfig.cta.exploreCareers} variant="lightOutline" size="lg" className="w-full xs:w-auto">
-                Explore Careers
+                {t('Explore Careers')}
               </Button>
             </div>
           </motion.div>
@@ -99,7 +101,7 @@ export default function HomePage() {
           >
             {['Recruitment', 'Staffing', 'Workforce Management'].map((item) => (
               <p key={item} className="text-sm font-medium text-white/65">
-                {item}
+                {t(item)}
               </p>
             ))}
           </motion.div>
@@ -112,18 +114,18 @@ export default function HomePage() {
             <motion.article {...fadeUp} className="card-shell flex flex-col overflow-hidden sm:flex-row">
               <OptimizedImage
                 src={images.employers.src}
-                alt={images.employers.alt}
+                alt={t(images.employers.alt)}
                 className="aspect-[16/10] sm:aspect-auto sm:w-2/5"
                 sizes="(max-width: 1024px) 100vw, 25vw"
               />
               <div className="flex flex-1 flex-col justify-center p-5 sm:p-6">
-                <Badge tone="cream">For employers</Badge>
-                <h2 className="mt-3 text-xl font-semibold sm:text-2xl">Your workforce, handled</h2>
+                <Badge tone="cream">{t('For employers')}</Badge>
+                <h2 className="mt-3 text-xl font-semibold sm:text-2xl">{t('Your workforce, handled')}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Request staff, fill critical roles, and get recruitment support built around how your business operates.
+                  {t('Request staff, fill critical roles, and get recruitment support built around how your business operates.')}
                 </p>
                 <div className="mt-5">
-                  <Button to="/employers" size="sm">Find your workforce</Button>
+                  <Button to="/employers" size="sm">{t('Find your workforce')}</Button>
                 </div>
               </div>
             </motion.article>
@@ -131,18 +133,18 @@ export default function HomePage() {
             <motion.article {...fadeUp} className="card-shell flex flex-col overflow-hidden sm:flex-row">
               <OptimizedImage
                 src={images.candidates.src}
-                alt={images.candidates.alt}
+                alt={t(images.candidates.alt)}
                 className="aspect-[16/10] sm:aspect-auto sm:w-2/5"
                 sizes="(max-width: 1024px) 100vw, 25vw"
               />
               <div className="flex flex-1 flex-col justify-center p-5 sm:p-6">
-                <Badge tone="gold">For candidates</Badge>
-                <h2 className="mt-3 text-xl font-semibold sm:text-2xl">Your next opportunity</h2>
+                <Badge tone="gold">{t('For candidates')}</Badge>
+                <h2 className="mt-3 text-xl font-semibold sm:text-2xl">{t('Your next opportunity')}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Explore roles and connect with temporary, contract, and permanent pathways.
+                  {t('Explore roles and connect with temporary, contract, and permanent pathways.')}
                 </p>
                 <div className="mt-5">
-                  <Button to="/candidates" size="sm">Explore careers</Button>
+                  <Button to="/candidates" size="sm">{t('Explore careers')}</Button>
                 </div>
               </div>
             </motion.article>
@@ -153,9 +155,9 @@ export default function HomePage() {
       <section className="section-pad bg-paper">
         <Container>
           <SectionHeading
-            eyebrow="Services"
-            title="Recruitment and staffing, end to end"
-            description="From permanent hires to temporary cover and workforce administration — one partner across the full staffing lifecycle."
+            eyebrow={t('Services')}
+            title={t('Recruitment and staffing, end to end')}
+            description={t('From permanent hires to temporary cover and workforce administration — one partner across the full staffing lifecycle.')}
           />
           <div className="card-grid mt-8 sm:mt-10">
             {services.map((service, index) => (
@@ -170,9 +172,9 @@ export default function HomePage() {
       <section className="section-pad bg-cream">
         <Container>
           <SectionHeading
-            eyebrow="How it works"
-            title="A clear path from brief to workforce support"
-            description="Four deliberate steps that keep hiring managers informed and candidates progressing with clarity."
+            eyebrow={t('How it works')}
+            title={t('A clear path from brief to workforce support')}
+            description={t('Four deliberate steps that keep hiring managers informed and candidates progressing with clarity.')}
           />
           <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
             {howItWorks.map((step) => (
@@ -185,9 +187,9 @@ export default function HomePage() {
       <section className="section-pad bg-paper">
         <Container>
           <SectionHeading
-            eyebrow="Industries"
-            title="Staffing shaped around your sector"
-            description="Specialist coverage across operational, customer-facing, and professional environments."
+            eyebrow={t('Industries')}
+            title={t('Staffing shaped around your sector')}
+            description={t('Specialist coverage across operational, customer-facing, and professional environments.')}
           />
           <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
             {industries.map((industry) => (
@@ -202,13 +204,13 @@ export default function HomePage() {
           <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-10">
             <SectionHeading
               className="max-w-none"
-              eyebrow="Why Staffora"
-              title="Built for trust, speed, and human connection"
-              description="A clear staffing presence without invented statistics, fake reviews, or borrowed credibility."
+              eyebrow={t('Why Staffora')}
+              title={t('Built for trust, speed, and human connection')}
+              description={t('A clear staffing presence without invented statistics, fake reviews, or borrowed credibility.')}
             />
             <OptimizedImage
               src={images.team.src}
-              alt={images.team.alt}
+              alt={t(images.team.alt)}
               className="aspect-[16/10] rounded-xl"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
@@ -219,8 +221,8 @@ export default function HomePage() {
                 <span className="text-sm font-medium text-accent">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.description}</p>
+                <h3 className="mt-3 text-lg font-semibold">{t(item.title)}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{t(item.description)}</p>
               </div>
             ))}
           </div>
@@ -231,33 +233,33 @@ export default function HomePage() {
         <Container>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              eyebrow="Opportunities"
-              title="Featured roles"
-              description="Published vacancies from the Staffora board."
+              eyebrow={t('Opportunities')}
+              title={t('Featured roles')}
+              description={t('Published vacancies from the Staffora board.')}
             />
             <Button to="/jobs" variant="secondary">
-              Explore all jobs
+              {t('Explore all jobs')}
             </Button>
           </div>
           <div className="card-grid mt-8 sm:mt-10">
             {jobs.slice(0, 3).map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
-            {jobs.length ? null : <p className="text-sm text-muted">Published roles will appear here.</p>}
+            {jobs.length ? null : <p className="text-sm text-muted">{t('Published roles will appear here.')}</p>}
           </div>
         </Container>
       </section>
 
       <CtaBand
-        eyebrow="Employers"
-        title="Need the Right People to Move Your Business Forward?"
-        description="Share your staffing brief and explore how Staffora can support recruitment, temporary cover, and workforce administration."
+        eyebrow={t('Employers')}
+        title={t('Need the Right People to Move Your Business Forward?')}
+        description={t('Share your staffing brief and explore how Staffora can support recruitment, temporary cover, and workforce administration.')}
         image={images.employerCta}
         actions={
           <>
-            <Button to={siteConfig.cta.requestStaff}>Submit a Staffing Request</Button>
+            <Button to={siteConfig.cta.requestStaff}>{t('Submit a Staffing Request')}</Button>
             <Button to="/services" variant="lightOutline">
-              View services
+              {t('View services')}
             </Button>
           </>
         }
@@ -265,15 +267,15 @@ export default function HomePage() {
 
       <CtaBand
         tone="cream"
-        eyebrow="Candidates"
-        title="Your skills deserve the right opportunity"
-        description="Browse open roles, register your interest, and apply once you have a candidate account."
+        eyebrow={t('Candidates')}
+        title={t('Your skills deserve the right opportunity')}
+        description={t('Browse open roles, register your interest, and apply once you have a candidate account.')}
         image={images.candidateCta}
         actions={
           <>
-            <Button to="/jobs">Explore opportunities</Button>
+            <Button to="/jobs">{t('Explore opportunities')}</Button>
             <Button to="/candidates#interest" variant="secondary">
-              Register interest
+              {t('Register interest')}
             </Button>
           </>
         }
@@ -284,16 +286,16 @@ export default function HomePage() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
             <SectionHeading
               className="max-w-none"
-              eyebrow="FAQ"
-              title="Answers before you enquire"
-              description="Clear guidance on staffing, recruitment pathways, and how to get in touch."
+              eyebrow={t('FAQ')}
+              title={t('Answers before you enquire')}
+              description={t('Clear guidance on staffing, recruitment pathways, and how to get in touch.')}
             />
-            <Accordion items={homeFaqs} />
+            <Accordion items={homeFaqs.map((faq) => ({ ...faq, question: t(faq.question), answer: t(faq.answer) }))} />
           </div>
           <p className="mt-8 text-sm text-muted">
-            Still deciding?{' '}
+            {t('Still deciding?')}{' '}
             <Link to="/contact" className="font-medium text-ink underline-offset-4 hover:underline">
-              Contact the team
+              {t('Contact the team')}
             </Link>
             <ArrowRight className="ml-1 inline h-3.5 w-3.5" aria-hidden />
           </p>

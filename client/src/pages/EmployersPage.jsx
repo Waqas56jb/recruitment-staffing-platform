@@ -14,6 +14,7 @@ import { images } from '../data/images'
 import { howItWorks } from '../data/process'
 import { services } from '../data/services'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 const challenges = [
   {
@@ -31,11 +32,19 @@ const challenges = [
 ]
 
 export default function EmployersPage() {
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Employers',
-    description:
+    title: t('Employers'),
+    description: t(
       'Request staff, fill temporary and permanent roles, and access workforce administration support with Staffora.',
+    ),
   })
+
+  const translatedFaqs = employerFaqs.map((faq) => ({
+    ...faq,
+    question: t(faq.question),
+    answer: t(faq.answer),
+  }))
 
   const employerServices = services.filter((service) =>
     [
@@ -46,20 +55,27 @@ export default function EmployersPage() {
       'workforce-management',
       'hr-administration',
     ].includes(service.id),
-  )
+  ).map((service) => ({
+    ...service,
+    title: t(service.title),
+    short: t(service.short),
+    description: t(service.description),
+  }))
 
   return (
     <>
       <PageHero
-        eyebrow="Employers"
-        title="Workforce solutions for ambitious businesses"
-        description="From single critical hires to multi-role temporary cover, Staffora helps you request staff and manage the wider workforce process with clarity."
+        eyebrow={t('Employers')}
+        title={t('Workforce solutions for ambitious businesses')}
+        description={t(
+          'From single critical hires to multi-role temporary cover, Staffora helps you request staff and manage the wider workforce process with clarity.',
+        )}
         image={images.meeting}
         actions={
           <>
-            <Button href="#staffing-request">Request Staff</Button>
+            <Button href="#staffing-request">{t('Request Staff')}</Button>
             <Button to="/services" variant="lightOutline">
-              Explore services
+              {t('Explore services')}
             </Button>
           </>
         }
@@ -68,9 +84,11 @@ export default function EmployersPage() {
       <section className="section-pad bg-cream">
         <Container>
           <SectionHeading
-            eyebrow="Challenges & solutions"
-            title="Hiring pressure, handled with structure"
-            description="We translate operational needs into clear briefs, shortlists, and ongoing staffing support."
+            eyebrow={t('Challenges & solutions')}
+            title={t('Hiring pressure, handled with structure')}
+            description={t(
+              'We translate operational needs into clear briefs, shortlists, and ongoing staffing support.',
+            )}
           />
           <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
             {challenges.map((item, index) => (
@@ -78,8 +96,8 @@ export default function EmployersPage() {
                 <span className="text-sm font-medium text-accent">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.solution}</p>
+                <h3 className="mt-3 text-lg font-semibold">{t(item.title)}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{t(item.solution)}</p>
               </article>
             ))}
           </div>
@@ -91,29 +109,35 @@ export default function EmployersPage() {
           <div className="grid items-center gap-6 md:gap-8 lg:grid-cols-2 lg:gap-10">
             <OptimizedImage
               src={images.workshop.src}
-              alt={images.workshop.alt}
+              alt={t(images.workshop.alt)}
               className="aspect-[16/11] rounded-2xl sm:aspect-[5/4]"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div className="min-w-0">
               <SectionHeading
                 className="max-w-none"
-                eyebrow="Service options"
-                title="Temporary, permanent, and everything between"
-                description="Choose the pathway that matches demand — and keep screening, communication, and administration connected."
+                eyebrow={t('Service options')}
+                title={t('Temporary, permanent, and everything between')}
+                description={t(
+                  'Choose the pathway that matches demand — and keep screening, communication, and administration connected.',
+                )}
               />
               <ul className="mt-6 space-y-3 text-sm leading-relaxed text-muted sm:mt-8 sm:space-y-4">
                 <li>
-                  <strong className="text-ink">Temporary staffing</strong> for peaks, absences, and project cover.
+                  <strong className="text-ink">{t('Temporary staffing')}</strong>{' '}
+                  {t('for peaks, absences, and project cover.')}
                 </li>
                 <li>
-                  <strong className="text-ink">Permanent recruitment</strong> for lasting hires and team growth.
+                  <strong className="text-ink">{t('Permanent recruitment')}</strong>{' '}
+                  {t('for lasting hires and team growth.')}
                 </li>
                 <li>
-                  <strong className="text-ink">Candidate screening</strong> to reduce interview noise.
+                  <strong className="text-ink">{t('Candidate screening')}</strong>{' '}
+                  {t('to reduce interview noise.')}
                 </li>
                 <li>
-                  <strong className="text-ink">Workforce administration</strong> for timesheets, documentation, and billing support.
+                  <strong className="text-ink">{t('Workforce administration')}</strong>{' '}
+                  {t('for timesheets, documentation, and billing support.')}
                 </li>
               </ul>
             </div>
@@ -123,7 +147,7 @@ export default function EmployersPage() {
 
       <section className="section-pad bg-cream">
         <Container>
-          <SectionHeading eyebrow="Capabilities" title="What employers use most" />
+          <SectionHeading eyebrow={t('Capabilities')} title={t('What employers use most')} />
           <div className="card-grid mt-8 sm:mt-10">
             {employerServices.map((service, index) => (
               <ServiceCard key={service.id} service={service} index={index} compact />
@@ -134,10 +158,13 @@ export default function EmployersPage() {
 
       <section className="section-pad bg-paper">
         <Container>
-          <SectionHeading eyebrow="Process" title="From briefing to ongoing support" />
+          <SectionHeading eyebrow={t('Process')} title={t('From briefing to ongoing support')} />
           <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
             {howItWorks.map((step) => (
-              <ProcessStep key={step.step} step={step} />
+              <ProcessStep
+                key={step.step}
+                step={{ ...step, title: t(step.title), description: t(step.description) }}
+              />
             ))}
           </div>
         </Container>
@@ -148,10 +175,10 @@ export default function EmployersPage() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10">
             <SectionHeading
               className="max-w-none"
-              eyebrow="Employer FAQ"
-              title="Common questions from hiring teams"
+              eyebrow={t('Employer FAQ')}
+              title={t('Common questions from hiring teams')}
             />
-            <Accordion items={employerFaqs} />
+            <Accordion items={translatedFaqs} />
           </div>
         </Container>
       </section>
@@ -161,14 +188,14 @@ export default function EmployersPage() {
           <div className="mb-6 flex flex-col gap-6 lg:mb-8 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
             <SectionHeading
               className="max-w-2xl"
-              eyebrow="Enquire"
-              title="Submit a staffing request"
-              description="Share the roles you need. The request is saved for the agency team."
+              eyebrow={t('Enquire')}
+              title={t('Submit a staffing request')}
+              description={t('Share the roles you need. The request is saved for the agency team.')}
             />
             <div className="hidden w-full max-w-xs overflow-hidden rounded-2xl lg:block xl:max-w-sm">
               <OptimizedImage
                 src={images.desk.src}
-                alt={images.desk.alt}
+                alt={t(images.desk.alt)}
                 className="aspect-[16/10]"
                 sizes="320px"
               />
@@ -179,9 +206,11 @@ export default function EmployersPage() {
       </section>
 
       <CtaBand
-        title="Prefer to talk through your brief first?"
-        description="Use the contact page for general employer enquiries. Update real phone and address details in site configuration before launch."
-        actions={<Button to="/contact" variant="secondary">Contact Staffora</Button>}
+        title={t('Prefer to talk through your brief first?')}
+        description={t(
+          'Use the contact page for general employer enquiries. Update real phone and address details in site configuration before launch.',
+        )}
+        actions={<Button to="/contact" variant="secondary">{t('Contact Staffora')}</Button>}
         image={images.formal}
       />
     </>

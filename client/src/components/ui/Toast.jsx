@@ -1,10 +1,13 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 const ToastContext = createContext(null)
 
 export function ToastProvider({ children }) {
+  const { t } = useI18n()
+  const tx = (value) => (typeof value === 'string' ? t(value) : value)
   const [toasts, setToasts] = useState([])
 
   const dismiss = useCallback((id) => {
@@ -41,14 +44,14 @@ export function ToastProvider({ children }) {
               <div className="flex-1">
                 {toast.title ? (
                   <p className="font-display text-sm font-semibold tracking-normal">
-                    {toast.title}
+                    {tx(toast.title)}
                   </p>
                 ) : null}
-                <p className="mt-1 text-sm opacity-90">{toast.message}</p>
+                <p className="mt-1 text-sm opacity-90">{tx(toast.message)}</p>
               </div>
               <button
                 type="button"
-                aria-label="Dismiss notification"
+                aria-label={t('Dismiss notification')}
                 onClick={() => dismiss(toast.id)}
                 className="rounded p-1 opacity-70 hover:opacity-100"
               >

@@ -21,6 +21,7 @@ import SectionHeading from '../components/ui/SectionHeading'
 import { images } from '../data/images'
 import { services } from '../data/services'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 import { cn } from '../utils/cn'
 
 const icons = {
@@ -38,10 +39,12 @@ const icons = {
 
 export default function ServicesPage() {
   const location = useLocation()
+  const { t } = useI18n()
   usePageMeta({
-    title: 'Services',
-    description:
+    title: t('Services'),
+    description: t(
       'Explore Staffora recruitment, temporary staffing, screening, workforce management, and administration services.',
+    ),
   })
 
   useEffect(() => {
@@ -53,11 +56,13 @@ export default function ServicesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Services"
-        title="Recruitment and workforce services with clarity"
-        description="A connected set of staffing capabilities — from sourcing and screening to administration support. Payroll execution and statutory compliance may require specialist providers."
+        eyebrow={t('Services')}
+        title={t('Recruitment and workforce services with clarity')}
+        description={t(
+          'A connected set of staffing capabilities — from sourcing and screening to administration support. Payroll execution and statutory compliance may require specialist providers.',
+        )}
         image={images.services}
-        actions={<Button to="/employers#staffing-request">Request Staff</Button>}
+        actions={<Button to="/employers#staffing-request">{t('Request Staff')}</Button>}
       />
 
       <section className="section-pad bg-cream">
@@ -78,8 +83,8 @@ export default function ServicesPage() {
                   <p className="eyebrow mt-5 text-accent">
                     {String(index + 1).padStart(2, '0')}
                   </p>
-                  <h2 className="display-md mt-3">{service.title}</h2>
-                  <p className="mt-4 leading-relaxed text-muted">{service.description}</p>
+                  <h2 className="display-md mt-3">{t(service.title)}</h2>
+                  <p className="mt-4 leading-relaxed text-muted">{t(service.description)}</p>
                 </div>
                 <div className={cn('overflow-hidden rounded-xl', reverse && 'lg:order-1')}>
                   <OptimizedImage
@@ -97,7 +102,7 @@ export default function ServicesPage() {
                         images.employers.src,
                       ][index % 10]
                     }
-                    alt={service.title}
+                    alt={t(service.title)}
                     className="aspect-[16/11]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
@@ -111,17 +116,21 @@ export default function ServicesPage() {
       <section className="section-pad bg-paper">
         <Container>
           <SectionHeading
-            eyebrow="Important note"
-            title="Where specialist partners may be required"
-            description="Staffora can support payroll administration workflows, timesheets, contracts, and billing coordination. Actual payroll execution, legal compliance advice, and salary transfers may require specialist providers or external integrations."
+            eyebrow={t('Important note')}
+            title={t('Where specialist partners may be required')}
+            description={t(
+              'Staffora can support payroll administration workflows, timesheets, contracts, and billing coordination. Actual payroll execution, legal compliance advice, and salary transfers may require specialist providers or external integrations.',
+            )}
           />
         </Container>
       </section>
 
       <CtaBand
-        title="Ready to brief a role?"
-        description="Tell us what your business needs and we will outline the most suitable staffing pathway."
-        actions={<Button to="/employers#staffing-request">Submit a staffing request</Button>}
+        title={t('Ready to brief a role?')}
+        description={t(
+          'Tell us what your business needs and we will outline the most suitable staffing pathway.',
+        )}
+        actions={<Button to="/employers#staffing-request">{t('Submit a staffing request')}</Button>}
         image={images.employerCta}
       />
     </>

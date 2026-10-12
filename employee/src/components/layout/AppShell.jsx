@@ -5,6 +5,8 @@ import { useAuth } from '../../context/AuthContext'
 import { useData } from '../../context/DataContext'
 import { cn } from '../../utils/cn'
 import Button from '../ui/Button'
+import LanguageSwitcher from '../ui/LanguageSwitcher'
+import { useI18n } from '../../i18n'
 
 const nav = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
@@ -22,6 +24,7 @@ const nav = [
 ]
 
 export default function AppShell() {
+  const { t } = useI18n()
   const { user, signOut } = useAuth()
   const { state, markNotificationRead } = useData()
   const navigate = useNavigate()
@@ -39,7 +42,7 @@ export default function AppShell() {
   const unread = notes.filter((n) => !n.read).length
 
   const NavItems = ({ onNavigate }) => (
-    <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4" aria-label="Primary">
+    <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4" aria-label={t('Primary')}>
       {nav.map((item) => {
         const Icon = item.icon
         return (
@@ -53,7 +56,7 @@ export default function AppShell() {
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />
-            {item.label}
+            {t(item.label)}
           </NavLink>
         )
       })}
@@ -68,10 +71,10 @@ export default function AppShell() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-sm font-bold text-ink">S</span>
             <div>
               <p className="text-lg font-semibold tracking-tight text-white">Staffora</p>
-              <p className="text-xs font-medium text-white/60">Employer Portal</p>
+              <p className="text-xs font-medium text-white/60">{t('Employer Portal')}</p>
             </div>
           </Link>
-          <button type="button" className="rounded p-1 lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu"><X className="h-5 w-5" /></button>
+          <button type="button" className="rounded p-1 lg:hidden" onClick={() => setOpen(false)} aria-label={t('Close menu')}><X className="h-5 w-5" /></button>
         </div>
         <NavItems onNavigate={() => setOpen(false)} />
         <div className="border-t border-white/10 p-4 text-xs text-white/60">
@@ -79,36 +82,37 @@ export default function AppShell() {
         </div>
       </aside>
 
-      {open ? <button type="button" className="fixed inset-0 z-30 bg-ink/40 lg:hidden" aria-label="Close overlay" onClick={() => setOpen(false)} /> : null}
+      {open ? <button type="button" className="fixed inset-0 z-30 bg-ink/40 lg:hidden" aria-label={t('Close overlay')} onClick={() => setOpen(false)} /> : null}
 
       <div className="flex min-h-screen flex-1 flex-col">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-white px-4 sm:px-6">
-          <button type="button" className="rounded-md border border-line p-2 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+          <button type="button" className="rounded-md border border-line p-2 lg:hidden" onClick={() => setOpen(true)} aria-label={t('Open menu')}>
             <Menu className="h-5 w-5" />
           </button>
-          <div className="hidden text-sm text-muted sm:block">Signed in as <strong className="text-ink">{user?.name}</strong> · {user?.role}</div>
+          <div className="hidden text-sm text-muted sm:block">{t('Signed in as')} <strong className="text-ink">{user?.name}</strong> · {t(user?.role)}</div>
           <div className="ml-auto flex items-center gap-2">
+            <LanguageSwitcher />
             <div className="relative">
-              <button type="button" className="relative rounded-md border border-line bg-white p-2" onClick={() => setShowNotes((v) => !v)} aria-label="Notifications">
+              <button type="button" className="relative rounded-md border border-line bg-white p-2" onClick={() => setShowNotes((v) => !v)} aria-label={t('Notifications')}>
                 <Bell className="h-4 w-4" />
                 {unread ? <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] text-white">{unread}</span> : null}
               </button>
               {showNotes ? (
                 <div className="absolute right-0 mt-2 w-80 rounded-xl border border-line bg-white p-3 shadow-lift">
-                  <p className="text-sm font-semibold">Notifications</p>
+                  <p className="text-sm font-semibold">{t('Notifications')}</p>
                   <div className="mt-2 max-h-72 space-y-2 overflow-y-auto">
                     {notes.length ? notes.map((n) => (
                       <button key={n.id} type="button" className={cn('w-full rounded-md border px-3 py-2 text-left text-sm', n.read ? 'border-line bg-paper' : 'border-accent/20 bg-cream')} onClick={() => { markNotificationRead(n.id); setShowNotes(false); if (n.href) navigate(n.href) }}>
-                        <p className="font-medium">{n.title}</p>
-                        <p className="text-xs text-muted">{n.body}</p>
+                        <p className="font-medium">{t(n.title)}</p>
+                        <p className="text-xs text-muted">{t(n.body)}</p>
                       </button>
-                    )) : <p className="text-sm text-muted">No notifications</p>}
+                    )) : <p className="text-sm text-muted">{t('No notifications')}</p>}
                   </div>
                 </div>
               ) : null}
             </div>
             <Button variant="outline" size="sm" onClick={() => { signOut(); navigate('/login') }}>
-              <LogOut className="h-3.5 w-3.5" /> Sign out
+              <LogOut className="h-3.5 w-3.5" /> {t('Sign out')}
             </Button>
           </div>
         </header>

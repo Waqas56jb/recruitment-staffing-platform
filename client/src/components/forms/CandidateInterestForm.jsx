@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { api } from '@staffora/api'
+import { useI18n } from '../../i18n'
 import { siteConfig } from '../../config/site'
 import {
   collectErrors,
@@ -33,6 +34,7 @@ const defaults = {
 
 export default function CandidateInterestForm() {
   const { push } = useToast()
+  const { t } = useI18n()
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [cvFile, setCvFile] = useState(null)
@@ -66,8 +68,8 @@ export default function CandidateInterestForm() {
       keys.forEach((key) => setError(key, { type: 'manual', message: nextErrors[key] }))
       push({
         tone: 'error',
-        title: 'Check the form',
-        message: 'Please correct the highlighted fields.',
+        title: t('Check the form'),
+        message: t('Please correct the highlighted fields.'),
       })
       return
     }
@@ -85,9 +87,9 @@ export default function CandidateInterestForm() {
       setSubmitted(true)
       reset(defaults)
       setCvFile(null)
-      push({ title: 'Interest saved', message: 'The team can see your details. The CV file itself stays on this device.' })
+      push({ title: t('Interest saved'), message: t('The team can see your details. The CV file itself stays on this device.') })
     } catch (error) {
-      push({ tone: 'error', title: 'Could not submit', message: error.message })
+      push({ tone: 'error', title: t('Could not submit'), message: t(error.message) })
     } finally {
       setSubmitting(false)
     }
@@ -100,9 +102,9 @@ export default function CandidateInterestForm() {
       className="form-panel"
     >
       <div className="mb-6 border-b border-line pb-5 sm:mb-8 sm:pb-6">
-        <p className="eyebrow text-accent">Expression of interest</p>
-        <h3 className="mt-2 display-md">Tell us about you</h3>
-        <p className="mt-2 text-sm text-muted sm:mt-3">{siteConfig.forms.cvNote}</p>
+        <p className="eyebrow text-accent">{t('Expression of interest')}</p>
+        <h3 className="mt-2 display-md">{t('Tell us about you')}</h3>
+        <p className="mt-2 text-sm text-muted sm:mt-3">{t(siteConfig.forms.cvNote)}</p>
       </div>
 
       <div className="form-grid">
@@ -123,11 +125,11 @@ export default function CandidateInterestForm() {
         </FormField>
         <FormField id="employmentType" label="Employment type" required error={errors.employmentType?.message}>
           <FormSelect id="employmentType" error={errors.employmentType} {...register('employmentType')}>
-            <option value="">Select type</option>
-            <option>Temporary</option>
-            <option>Permanent</option>
-            <option>Contract</option>
-            <option>Open to all</option>
+            <option value="">{t('Select type')}</option>
+            <option value="Temporary">{t('Temporary')}</option>
+            <option value="Permanent">{t('Permanent')}</option>
+            <option value="Contract">{t('Contract')}</option>
+            <option value="Open to all">{t('Open to all')}</option>
           </FormSelect>
         </FormField>
         <FormField id="experience" label="Experience" className="sm:col-span-2 xl:col-span-3">
@@ -145,7 +147,7 @@ export default function CandidateInterestForm() {
         <FormField
           id="cv"
           label="CV upload"
-          hint={`Accepted: PDF or Word. Max ${Math.round(CV_MAX_BYTES / (1024 * 1024))}MB. ${siteConfig.forms.cvNote}`}
+          hint={`${t('Accepted: PDF or Word. Max {size}MB.', { size: Math.round(CV_MAX_BYTES / (1024 * 1024)) })} ${t(siteConfig.forms.cvNote)}`}
           error={cvError}
           className="sm:col-span-2 xl:col-span-3"
         >
@@ -172,13 +174,13 @@ export default function CandidateInterestForm() {
         />
         <div className="flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:items-center">
           <Button type="submit" disabled={submitting} className="w-full xs:w-auto">
-            {submitting ? 'Submitting…' : 'Submit interest'}
+            {submitting ? t('Submitting…') : t('Submit interest')}
           </Button>
-          {submitting ? <LoadingSpinner label="Submitting" /> : null}
+          {submitting ? <LoadingSpinner label={t('Submitting')} /> : null}
         </div>
         {submitted ? (
           <p className="rounded-lg bg-paper px-4 py-3 text-sm text-muted" role="status">
-            Interest saved. Create an account if you want to apply to published roles.
+            {t('Interest saved. Create an account if you want to apply to published roles.')}
           </p>
         ) : null}
       </div>

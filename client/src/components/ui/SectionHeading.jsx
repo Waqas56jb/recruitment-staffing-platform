@@ -1,4 +1,5 @@
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 export default function SectionHeading({
   eyebrow,
@@ -9,6 +10,8 @@ export default function SectionHeading({
   className,
   children,
 }) {
+  const { t } = useI18n()
+  const tx = (value) => (typeof value === 'string' ? t(value) : value)
   return (
     <div
       className={cn(
@@ -24,7 +27,7 @@ export default function SectionHeading({
             tone === 'dark' ? 'text-gold-soft' : 'text-accent',
           )}
         >
-          {eyebrow}
+          {tx(eyebrow)}
         </p>
       ) : null}
       <h2
@@ -33,7 +36,7 @@ export default function SectionHeading({
           tone === 'dark' ? 'text-white' : 'text-ink',
         )}
       >
-        {title}
+        {tx(title)}
       </h2>
       {description ? (
         <p
@@ -43,7 +46,7 @@ export default function SectionHeading({
             align === 'center' && 'mx-auto',
           )}
         >
-          {description}
+          {tx(description)}
         </p>
       ) : null}
       {children}

@@ -5,8 +5,10 @@ import DataTable from '../components/ui/DataTable'
 import PageHeader from '../components/ui/PageHeader'
 import Pagination from '../components/ui/Pagination'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 
 export default function CandidatesPage() {
+  const { t } = useI18n()
   const { state } = useData()
   const [q, setQ] = useState('')
   const [page, setPage] = useState(1)
@@ -21,16 +23,16 @@ export default function CandidatesPage() {
 
   return (
     <div>
-      <PageHeader title="Candidate review" description="Demonstration candidates matched to your staffing activity. Private contact details are limited in this employer view." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Candidates' }]} />
-      <input className="input-field mb-4 max-w-md" placeholder="Search name, skills, location" value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
+      <PageHeader title={t('Candidate review')} description={t('Demonstration candidates matched to your staffing activity. Private contact details are limited in this employer view.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Candidates') }]} />
+      <input className="input-field mb-4 max-w-md" placeholder={t('Search name, skills, location')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1) }} />
       <DataTable
         rows={slice}
         columns={[
-          { key: 'fullName', label: 'Candidate', render: (c) => <Link className="font-medium hover:text-accent" to={`/candidates/${c.id}`}>{c.fullName}</Link> },
-          { key: 'headline', label: 'Profile' },
-          { key: 'city', label: 'Location' },
-          { key: 'availability', label: 'Availability' },
-          { key: 'skills', label: 'Skills', render: (c) => <div className="flex flex-wrap gap-1">{c.skills.slice(0, 3).map((s) => <Badge key={s} tone="cream">{s}</Badge>)}</div> },
+          { key: 'fullName', label: t('Candidate'), render: (c) => <Link className="font-medium hover:text-accent" to={`/candidates/${c.id}`}>{c.fullName}</Link> },
+          { key: 'headline', label: t('Profile') },
+          { key: 'city', label: t('Location') },
+          { key: 'availability', label: t('Availability'), render: (c) => t(c.availability) },
+          { key: 'skills', label: t('Skills'), render: (c) => <div className="flex flex-wrap gap-1">{c.skills.slice(0, 3).map((s) => <Badge key={s} tone="cream">{s}</Badge>)}</div> },
         ]}
       />
       <Pagination page={page} pageSize={5} total={rows.length} onChange={setPage} />

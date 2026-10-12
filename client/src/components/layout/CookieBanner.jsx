@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import Button from '../ui/Button'
 import Container from '../ui/Container'
+import { useI18n } from '../../i18n'
 
 const STORAGE_KEY = 'staffora-cookie-prefs'
 
 export default function CookieBanner() {
+  const { t } = useI18n()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -32,11 +34,11 @@ export default function CookieBanner() {
       <Container className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold">
-            Cookie preferences
+            {t('Cookie preferences')}
           </p>
           <p className="mt-1 text-sm text-muted">
-            We use essential cookies to run the site and optional cookies to improve experience.
-            Manage preferences any time on the Cookie Policy page.
+            {t('We use essential cookies to run the site and optional cookies to improve experience.')}{' '}
+            {t('Manage preferences any time on the Cookie Policy page.')}
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -45,13 +47,13 @@ export default function CookieBanner() {
             size="sm"
             onClick={() => save({ essential: true, analytics: false, updatedAt: Date.now() })}
           >
-            Essential only
+            {t('Essential only')}
           </Button>
           <Button
             size="sm"
             onClick={() => save({ essential: true, analytics: true, updatedAt: Date.now() })}
           >
-            Accept all
+            {t('Accept all')}
           </Button>
         </div>
       </Container>

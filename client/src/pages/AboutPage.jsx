@@ -6,6 +6,7 @@ import SectionHeading from '../components/ui/SectionHeading'
 import { siteConfig } from '../config/site'
 import { images } from '../data/images'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useI18n } from '../i18n'
 
 const pillars = [
   {
@@ -27,17 +28,18 @@ const pillars = [
 ]
 
 export default function AboutPage() {
+  const { t } = useI18n()
   usePageMeta({
-    title: 'About',
-    description: `Learn about ${siteConfig.brand.name} — mission, service philosophy, and recruitment approach.`,
+    title: t('About'),
+    description: t('Learn about {brand} — mission, service philosophy, and recruitment approach.', { brand: siteConfig.brand.name }),
   })
 
   return (
     <>
       <PageHero
-        eyebrow="About"
-        title={`${siteConfig.brand.name} exists to connect great people with stronger businesses`}
-        description="A temporary brand name you can replace later — with a permanent commitment to professional staffing craft."
+        eyebrow={t('About')}
+        title={t('{brand} exists to connect great people with stronger businesses', { brand: siteConfig.brand.name })}
+        description={t('A temporary brand name you can replace later — with a permanent commitment to professional staffing craft.')}
         image={images.about}
       />
 
@@ -46,8 +48,8 @@ export default function AboutPage() {
           <div className="grid gap-5 md:grid-cols-2">
             {pillars.map((item) => (
               <article key={item.title} className="rounded-2xl border border-line bg-white p-7">
-                <h2 className="display-md text-[1.75rem]">{item.title}</h2>
-                <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">{item.body}</p>
+                <h2 className="display-md text-[1.75rem]">{t(item.title)}</h2>
+                <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">{t(item.body)}</p>
               </article>
             ))}
           </div>
@@ -59,22 +61,22 @@ export default function AboutPage() {
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <OptimizedImage
               src={images.team.src}
-              alt={images.team.alt}
+              alt={t(images.team.alt)}
               className="aspect-[5/4] rounded-2xl"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div>
               <SectionHeading
-                eyebrow="Relationships"
-                title="Employers and candidates, both matter"
-                description="Strong placements come from understanding operational reality and candidate ambition at the same time."
+                eyebrow={t('Relationships')}
+                title={t('Employers and candidates, both matter')}
+                description={t('Strong placements come from understanding operational reality and candidate ambition at the same time.')}
               />
               <div className="mt-8 space-y-4 text-sm leading-relaxed text-muted">
                 <p>
-                  For employers, that means briefs that capture the work, screening that reduces noise, and communication that stays useful under pressure.
+                  {t('For employers, that means briefs that capture the work, screening that reduces noise, and communication that stays useful under pressure.')}
                 </p>
                 <p>
-                  For candidates, that means clear expectations, respectful process, and introductions that make sense for their experience.
+                  {t('For candidates, that means clear expectations, respectful process, and introductions that make sense for their experience.')}
                 </p>
               </div>
             </div>
@@ -85,9 +87,9 @@ export default function AboutPage() {
       <section className="section-pad bg-cream">
         <Container>
           <SectionHeading
-            eyebrow="Placeholders"
-            title="Company history and team details coming soon"
-            description="Genuine company history, leadership biographies, office locations, and team information should replace these placeholders before launch."
+            eyebrow={t('Placeholders')}
+            title={t('Company history and team details coming soon')}
+            description={t('Genuine company history, leadership biographies, office locations, and team information should replace these placeholders before launch.')}
           />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {['Company history', 'Leadership team', 'Locations'].map((item) => (
@@ -95,15 +97,15 @@ export default function AboutPage() {
                 key={item}
                 className="rounded-xl border border-dashed border-line bg-paper px-5 py-10 text-center"
               >
-                <h3 className="font-display text-xl font-bold tracking-tight">{item}</h3>
-                <p className="mt-3 text-sm text-muted">Content placeholder</p>
+                <h3 className="font-display text-xl font-bold tracking-tight">{t(item)}</h3>
+                <p className="mt-3 text-sm text-muted">{t('Content placeholder')}</p>
               </div>
             ))}
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Button to="/contact">Contact us</Button>
+            <Button to="/contact">{t('Contact us')}</Button>
             <Button to="/employers" variant="outline">
-              Employer solutions
+              {t('Employer solutions')}
             </Button>
           </div>
         </Container>

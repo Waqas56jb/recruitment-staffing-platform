@@ -1,3 +1,4 @@
+import { useI18n } from '../../i18n'
 import { cn } from '../../utils/cn'
 
 const tones = {
@@ -11,9 +12,10 @@ const tones = {
 }
 
 export default function Badge({ children, tone = 'muted', className }) {
+  const { t } = useI18n()
   return (
     <span className={cn('inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium', tones[tone] || tones.muted, className)}>
-      {children}
+      {typeof children === 'string' ? t(children) : children}
     </span>
   )
 }

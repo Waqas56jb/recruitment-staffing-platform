@@ -6,8 +6,10 @@ import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import PageHeader from '../components/ui/PageHeader'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 
 export default function JobsPage() {
+  const { t } = useI18n()
   const { state, toggleSavedJob } = useData()
   const [q, setQ] = useState('')
   const [category, setCategory] = useState('')
@@ -23,19 +25,19 @@ export default function JobsPage() {
 
   return (
     <div>
-      <PageHeader title="Find jobs" description="Published roles you can apply to." breadcrumbs={[{ label: 'Home', to: '/dashboard' }, { label: 'Jobs' }]} />
+      <PageHeader title={t('Find jobs')} description={t('Published roles you can apply to.')} breadcrumbs={[{ label: t('Home'), to: '/dashboard' }, { label: t('Jobs') }]} />
       <div className="mb-4 grid gap-3 md:grid-cols-3">
-        <input className="input-field" placeholder="Search title, skills, location" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className="input-field" value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">All categories</option>
-          {categories.map((c) => <option key={c}>{c}</option>)}
+        <input className="input-field" placeholder={t('Search title, skills, location')} aria-label={t('Search title, skills, location')} value={q} onChange={(e) => setQ(e.target.value)} />
+        <select className="input-field" value={category} onChange={(e) => setCategory(e.target.value)} aria-label={t('Category')}>
+          <option value="">{t('All categories')}</option>
+          {categories.map((c) => <option key={c} value={c}>{t(c)}</option>)}
         </select>
-        <select className="input-field" value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="">All employment types</option>
-          {['Temporary', 'Permanent', 'Contract'].map((t) => <option key={t}>{t}</option>)}
+        <select className="input-field" value={type} onChange={(e) => setType(e.target.value)} aria-label={t('Employment type')}>
+          <option value="">{t('All employment types')}</option>
+          {['Temporary', 'Permanent', 'Contract'].map((value) => <option key={value} value={value}>{t(value)}</option>)}
         </select>
       </div>
-      {!rows.length ? <EmptyState title="No matching jobs" description="Try clearing filters." /> : (
+      {!rows.length ? <EmptyState title={t('No matching jobs')} description={t('Try clearing filters.')} /> : (
         <div className="grid gap-4 md:grid-cols-2">
           {rows.map((job) => {
             const saved = state.savedJobIds.includes(job.id)
@@ -44,14 +46,14 @@ export default function JobsPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <Link to={`/jobs/${job.id}`} className="font-display text-xl font-semibold hover:text-accent">{job.title}</Link>
-                    <p className="text-sm text-muted">{job.location} · {job.employmentType}</p>
+                    <p className="text-sm text-muted">{job.location} · {t(job.employmentType)}</p>
                   </div>
-                  {job.isSample ? <Badge tone="gold">Sample</Badge> : null}
+                  {job.isSample ? <Badge tone="gold">{t('Sample')}</Badge> : null}
                 </div>
                 <p className="text-sm text-muted line-clamp-2">{job.description}</p>
                 <div className="mt-auto flex flex-wrap gap-2">
-                  <Button to={`/jobs/${job.id}`} size="sm">View role</Button>
-                  <Button size="sm" variant="outline" onClick={() => toggleSavedJob(job.id)}>{saved ? 'Unsave' : 'Save'}</Button>
+                  <Button to={`/jobs/${job.id}`} size="sm">{t('View role')}</Button>
+                  <Button size="sm" variant="outline" onClick={() => toggleSavedJob(job.id)}>{saved ? t('Unsave') : t('Save')}</Button>
                 </div>
               </Card>
             )

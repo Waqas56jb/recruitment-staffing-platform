@@ -1,6 +1,7 @@
 import OptimizedImage from '../ui/OptimizedImage'
 import Container from '../ui/Container'
 import { cn } from '../../utils/cn'
+import { useI18n } from '../../i18n'
 
 export default function CtaBand({
   eyebrow,
@@ -10,6 +11,8 @@ export default function CtaBand({
   image,
   tone = 'dark',
 }) {
+  const { t } = useI18n()
+  const tx = (value) => (typeof value === 'string' ? t(value) : value)
   const dark = tone === 'dark'
 
   return (
@@ -18,7 +21,7 @@ export default function CtaBand({
         <>
           <OptimizedImage
             src={image.src}
-            alt={image.alt}
+            alt={tx(image.alt)}
             className="absolute inset-0"
             imgClassName={dark ? 'opacity-30' : 'opacity-15'}
             sizes="100vw"
@@ -37,10 +40,10 @@ export default function CtaBand({
         <div className="max-w-2xl">
           {eyebrow ? (
             <p className={cn('eyebrow mb-2', dark ? 'text-gold-soft' : 'text-accent')}>
-              {eyebrow}
+              {tx(eyebrow)}
             </p>
           ) : null}
-          <h2 className="display-lg">{title}</h2>
+          <h2 className="display-lg">{tx(title)}</h2>
           {description ? (
             <p
               className={cn(
@@ -48,7 +51,7 @@ export default function CtaBand({
                 dark ? 'text-white/75' : 'text-muted',
               )}
             >
-              {description}
+              {tx(description)}
             </p>
           ) : null}
           {actions ? (

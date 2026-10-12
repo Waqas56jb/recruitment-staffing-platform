@@ -9,9 +9,11 @@ import Modal from '../components/ui/Modal'
 import PageHeader from '../components/ui/PageHeader'
 import { useToast } from '../components/ui/Toast'
 import { useData } from '../context/DataContext'
+import { useI18n } from '../i18n'
 import { required } from '../utils/validation'
 
 export default function JobDetailPage() {
+  const { t } = useI18n()
   const { id } = useParams()
   const { state, createApplication, toggleSavedJob } = useData()
   const { push } = useToast()
@@ -24,7 +26,7 @@ export default function JobDetailPage() {
   const [errors, setErrors] = useState({})
 
   if (!job || job.status !== 'Published') {
-    return <EmptyState title="Job not available" description="This listing is not published in the demo." actionLabel="Back to jobs" actionTo="/jobs" />
+    return <EmptyState title={t('Job not available')} description={t('This listing is not published in the demo.')} actionLabel={t('Back to jobs')} actionTo="/jobs" />
   }
 
   const submit = async () => {
@@ -44,11 +46,11 @@ export default function JobDetailPage() {
         experienceSummary: form.experienceSummary,
         additional: '',
       })
-      push({ title: 'Application submitted', message: 'The agency can see it on the recruitment board.' })
+      push({ title: t('Application submitted'), message: t('The agency can see it on the recruitment board.') })
       setOpen(false)
       navigate(`/applications/${app.id}`)
     } catch (err) {
-      push({ title: 'Could not apply', message: err.message, tone: 'error' })
+      push({ title: t('Could not apply'), message: t(err.message), tone: 'error' })
     }
   }
 
@@ -56,60 +58,60 @@ export default function JobDetailPage() {
     <div>
       <PageHeader
         title={job.title}
-        description={`${job.location} · ${job.employmentType}`}
-        breadcrumbs={[{ label: 'Jobs', to: '/jobs' }, { label: job.title }]}
+        description={`${job.location} · ${t(job.employmentType)}`}
+        breadcrumbs={[{ label: t('Jobs'), to: '/jobs' }, { label: job.title }]}
         actions={(
           <>
-            <Button variant="outline" onClick={() => toggleSavedJob(job.id)}>{state.savedJobIds.includes(job.id) ? 'Unsave' : 'Save job'}</Button>
-            {existing ? <Button to={`/applications/${existing.id}`}>View application</Button> : <Button onClick={() => setOpen(true)}>Apply</Button>}
+            <Button variant="outline" onClick={() => toggleSavedJob(job.id)}>{state.savedJobIds.includes(job.id) ? t('Unsave') : t('Save job')}</Button>
+            {existing ? <Button to={`/applications/${existing.id}`}>{t('View application')}</Button> : <Button onClick={() => setOpen(true)}>{t('Apply')}</Button>}
           </>
         )}
       />
       <div className="mb-4 flex flex-wrap gap-2">
-        {job.isSample ? <Badge tone="gold">Sample listing</Badge> : null}
-        <Badge tone="cream">{job.category}</Badge>
+        {job.isSample ? <Badge tone="gold">{t('Sample listing')}</Badge> : null}
+        <Badge tone="cream">{t(job.category)}</Badge>
         <Badge tone="muted">{job.salaryLabel}</Badge>
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2 space-y-4 text-sm">
           <p>{job.description}</p>
           <div>
-            <p className="font-display text-sm font-semibold">Responsibilities</p>
+            <p className="font-display text-sm font-semibold">{t('Responsibilities')}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">{(job.responsibilities || []).map((r) => <li key={r}>{r}</li>)}</ul>
           </div>
           <div>
-            <p className="font-display text-sm font-semibold">Requirements</p>
+            <p className="font-display text-sm font-semibold">{t('Requirements')}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">{(job.requirements || []).map((r) => <li key={r}>{r}</li>)}</ul>
           </div>
         </Card>
         <Card className="space-y-3 text-sm">
-          <p><strong>Employer:</strong> {company?.name || 'Confidential'}</p>
-          <p><strong>Experience:</strong> {job.experienceLevel}</p>
-          <p><strong>Skills:</strong> {(job.skills || []).join(', ')}</p>
-          <Link to="/jobs" className="block text-xs font-semibold text-accent">More jobs</Link>
+          <p><strong>{t('Employer:')}</strong> {company?.name || t('Confidential')}</p>
+          <p><strong>{t('Experience:')}</strong> {t(job.experienceLevel)}</p>
+          <p><strong>{t('Skills:')}</strong> {(job.skills || []).join(', ')}</p>
+          <Link to="/jobs" className="block text-xs font-semibold text-accent">{t('More jobs')}</Link>
         </Card>
       </div>
 
       <Modal
         open={open}
-        title="Apply (demo)"
+        title={t('Apply (demo)')}
         onClose={() => setOpen(false)}
         footer={(
           <>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={submit}>Submit application</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>{t('Cancel')}</Button>
+            <Button onClick={submit}>{t('Submit application')}</Button>
           </>
         )}
       >
-        <p className="mb-4 text-sm text-muted">Your application is saved to Staffora.</p>
+        <p className="mb-4 text-sm text-muted">{t('Your application is saved to Staffora.')}</p>
         <div className="space-y-3">
-          <Field id="cover" label="Cover letter" required error={errors.coverLetter}>
+          <Field id="cover" label={t('Cover letter')} required error={t(errors.coverLetter)}>
             <textarea id="cover" className="input-field" rows={4} value={form.coverLetter} onChange={(e) => setForm((f) => ({ ...f, coverLetter: e.target.value }))} />
           </Field>
-          <Field id="avail" label="Availability" required error={errors.availability}>
+          <Field id="avail" label={t('Availability')} required error={t(errors.availability)}>
             <input id="avail" className="input-field" value={form.availability} onChange={(e) => setForm((f) => ({ ...f, availability: e.target.value }))} />
           </Field>
-          <Field id="exp" label="Experience summary">
+          <Field id="exp" label={t('Experience summary')}>
             <input id="exp" className="input-field" value={form.experienceSummary} onChange={(e) => setForm((f) => ({ ...f, experienceSummary: e.target.value }))} />
           </Field>
         </div>
