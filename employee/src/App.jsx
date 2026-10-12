@@ -4,7 +4,7 @@ import AppShell from './components/layout/AppShell'
 import { ToastProvider } from './components/ui/Toast'
 import { AuthProvider } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
-import LoginPage from './pages/LoginPage'
+import SiteLoginRedirect from './components/auth/SiteLoginRedirect'
 import DashboardPage from './pages/DashboardPage'
 import StaffingRequestsPage from './pages/StaffingRequestsPage'
 import StaffingRequestFormPage from './pages/StaffingRequestFormPage'
@@ -31,7 +31,7 @@ export default function App() {
       <DataProvider audience="employee">
         <ToastProvider>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={<SiteLoginRedirect />} />
             <Route
               path="/"
               element={(

@@ -19,6 +19,14 @@ for (const mod of Object.values(modules)) {
 
 function readStoredLang() {
   try {
+    // ?lang=nl is passed when hopping between the website and the panels.
+    const fromUrl = new URLSearchParams(window.location.search).get('lang')
+    if (LANGUAGES.some((l) => l.code === fromUrl)) {
+      localStorage.setItem(STORAGE_KEY, fromUrl)
+      return fromUrl
+    }
+  } catch { /* ignore */ }
+  try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (LANGUAGES.some((l) => l.code === stored)) return stored
   } catch { /* storage unavailable */ }

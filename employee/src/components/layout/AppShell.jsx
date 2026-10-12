@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { redirectToPublicLogin } from '@staffora/auth'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Bell, LogOut, Menu, X, LayoutDashboard, ClipboardList, Users, Briefcase, HardHat, Clock3, FileText, Receipt, BarChart3, Building2, UserCog, Settings } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -111,7 +112,7 @@ export default function AppShell() {
                 </div>
               ) : null}
             </div>
-            <Button variant="outline" size="sm" onClick={() => { signOut(); navigate('/login') }}>
+            <Button variant="outline" size="sm" onClick={() => { signOut(); redirectToPublicLogin({ signedOut: true }) }}>
               <LogOut className="h-3.5 w-3.5" aria-hidden="true" /><span className="hidden whitespace-nowrap sm:inline">{t('Sign out')}</span><span className="sr-only sm:hidden">{t('Sign out')}</span>
             </Button>
           </div>

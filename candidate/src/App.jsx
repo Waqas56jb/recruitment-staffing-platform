@@ -4,7 +4,7 @@ import AppShell from './components/layout/AppShell'
 import { ToastProvider } from './components/ui/Toast'
 import { AuthProvider } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
-import LoginPage from './pages/LoginPage'
+import SiteLoginRedirect from './components/auth/SiteLoginRedirect'
 import RegisterPage from './pages/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import DashboardPage from './pages/DashboardPage'
@@ -25,7 +25,7 @@ export default function App() {
       <DataProvider audience="candidate">
         <ToastProvider>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={<SiteLoginRedirect />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route

@@ -122,10 +122,42 @@ export function loadPortalSession(portal) {
   return null
 }
 
+// Carry the selected UI language across portals (each portal is its own origin/localStorage).
+function langQuery() {
+  try {
+    const lang = window.localStorage.getItem('staffora.lang')
+    return lang && lang !== 'en' ? `?lang=${encodeURIComponent(lang)}` : ''
+  } catch {
+    return ''
+  }
+}
+
 export function panelUrl(session) {
   const origin = PORTALS[session.portal]
   const payload = encodeURIComponent(JSON.stringify(toSession(session)))
-  return `${origin}/dashboard#staffora=${payload}`
+  return `${origin}/dashboard${langQuery()}#staffora=${payload}`
+}
+
+// All panels sign in through the public website's login page.
+// signedOut tells the website to drop its own copy of the session (portals don't share cookies).
+export function publicLoginUrl({ signedOut = false } = {}) {
+  const query = langQuery()
+  const logout = signedOut ? `${query ? '&' : '?'}logout=1` : ''
+  return `${PORTALS.public}/login${query}${logout}`
+}
+
+export function redirectToPublicLogin(options) {
+  window.location.replace(publicLoginUrl(options))
+}
+
+// Called by the website on startup: clear the session when arriving from a panel sign-out.
+export function consumeLogoutParam() {
+  if (typeof window === 'undefined') return
+  const url = new URL(window.location.href)
+  if (url.searchParams.get('logout') !== '1') return
+  clearSession()
+  url.searchParams.delete('logout')
+  window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
 }
 
 export function redirectToPanel(session) {
